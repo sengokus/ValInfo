@@ -19,3 +19,37 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Valorant
+      fonts:
+        - asset: fonts/Valorant Font.ttf
+
+    - family: Din Next
+      fonts:
+        - asset: fonts/DINNextLTArabic-Regular.ttf
+        - asset: fonts/DINNextLTArabic-Bold.ttf
+        - asset: fonts/DINNextLTArabic-Medium.ttf
+        - asset: fonts/DINNextLTArabic-Light.ttf
+        - asset: fonts/DINNextLTArabic-Black.ttf
+        - asset: fonts/DINNextLTArabic-Heavy.ttf
+        - asset: fonts/DINNextLTArabic-Italic.ttf
+        - asset: fonts/DINNextLTArabic-BlackItalic.ttf
+        - asset: fonts/DINNextLTArabic-BoldItalic.ttf
+        - asset: fonts/DINNextLTArabic-HeavyItalic.ttf
+        - asset: fonts/DINNextLTArabic-LightItalic.ttf
+        - asset: fonts/DINNextLTArabic-MediumItalic.ttf
+        - asset: fonts/DINNextLTArabic-RegularItalic.ttf
+        - asset: fonts/DINNextLTArabic-Thin.ttf
+        - asset: fonts/DINNextLTArabic-ThinItalic.ttf
+
+    - family: Mark Pro
+      fonts:
+        - asset: fonts/MarkPro-Bold.otf
+        - asset: fonts/MarkPro-Book.otf
+        - asset: fonts/MarkPro-Heavy.otf
+        - asset: fonts/MarkPro-Light.otf
+        - asset: fonts/MarkPro-Medium.otf
+        - asset: fonts/MarkPro-Regular.otf
+        - asset: fonts/MarkPro-Semibold.otf
+        - asset: fonts/MarkPro-Thin.otf
+        - asset: fonts/MarkPro-UltraLight.otf

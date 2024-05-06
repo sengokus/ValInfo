@@ -3,12 +3,11 @@ import 'package:http/http.dart' as http;
 
 // Unofficial Valorant API from valorant-api.com 
 Future<Map<String, dynamic>> fetchValApiData() async {
-  const String apiKey = '9EDBB66DDAF03A61'; // Replace with your API key
   const String agentsUrl = 'https://valorant-api.com/v1/agents';
 
   // Fetching agents data
   final agentResponse =
-      await http.get(Uri.parse(agentsUrl), headers: {'X-Riot-Token': apiKey});
+      await http.get(Uri.parse(agentsUrl));
 
   if (agentResponse.statusCode == 200) {
     final Map<String, dynamic> agentsData = json.decode(agentResponse.body);
@@ -20,6 +19,7 @@ Future<Map<String, dynamic>> fetchValApiData() async {
       'displayName': agent['displayName'],
       'fullPortrait': agent['fullPortrait'],
       'description': agent['description'],
+      'agentIcon' : agent['displayIcon'],
     };
   } else {
     throw Exception('Failed to fetch agents data: ${agentResponse.statusCode}');
@@ -30,7 +30,7 @@ Future<Map<String, dynamic>> fetchValApiData() async {
 /*
 // Valorant API from valorant-api.com
 Future<void> fetchValApiData() async {
-  const String apiKey = '9EDBB66DDAF03A61'; // Replace with your API key
+  const String apiKey = ''; // Replace with your API key
   const String agentsUrl = 'https://valorant-api.com/v1/agents';
   const String mapsUrl = 'https://valorant-api.com/v1/maps';
 

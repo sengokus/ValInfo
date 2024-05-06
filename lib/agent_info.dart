@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'main.dart';
 import 'riotapi.dart';
 
 class AgentInfo extends StatefulWidget {
@@ -12,6 +14,7 @@ class _AgentInfoState extends State<AgentInfo> {
   String? agentName;
   String? agentPhotoUrl;
   String? agentDescription;
+  String? agentIcon; 
 
   // Function to fetch agent data
   Future<void> fetchAgentData() async {
@@ -20,6 +23,7 @@ class _AgentInfoState extends State<AgentInfo> {
       agentName = agentData['displayName'];
       agentPhotoUrl = agentData['fullPortrait'];
       agentDescription = agentData['description'];
+      agentIcon = agentData['agentIcon'];
     });
   }
 
@@ -32,9 +36,9 @@ class _AgentInfoState extends State<AgentInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Agent Info'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Agent Info'),
+      // ),
       body: Center(
         child: agentPhotoUrl != null
             ? Column(
@@ -42,13 +46,24 @@ class _AgentInfoState extends State<AgentInfo> {
                 children: [
                   Text(
                     agentName ?? 'Loading...',
-                    style: const TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.primary),
                   ),
                   const SizedBox(height: 15),
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Image.network(
                       agentPhotoUrl!,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Container(
+                      color: Colors.black,
+                      child: Image.network(
+                        agentIcon!,
+                        height: 50,
+                        width: 50,
+                      ),
                     ),
                   ),
                   Padding(

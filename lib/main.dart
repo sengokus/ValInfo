@@ -16,6 +16,20 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 250, 68, 84),
+          // brightness: Brightness.dark,
+        ),
+        // 
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(
+            fontSize: 60, 
+            fontWeight: FontWeight.bold
+          ),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/agentInfoPage',
       routes: {
