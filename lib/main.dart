@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:valinfo/agent_info.dart';
+import 'package:valinfo/riotapi.dart';
 
 import 'onboarding.dart';
 
+
 void main() {
   runApp(const MainApp());
+  fetchValApiData();
 }
 
 class MainApp extends StatelessWidget {
@@ -13,9 +17,10 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/agentInfoPage',
       routes: {
         '/': (context) => const Onboarding(),
+        '/agentInfoPage': (context) => const AgentInfo(),
       },
     );
   }
