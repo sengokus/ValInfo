@@ -25,6 +25,7 @@ class MainApp extends StatelessWidget {
         // 
         textTheme: const TextTheme(
           titleLarge: TextStyle(
+            fontFamily: 'Valorant',
             fontSize: 60, 
             fontWeight: FontWeight.bold
           ),

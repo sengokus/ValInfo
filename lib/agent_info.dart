@@ -46,7 +46,12 @@ class _AgentInfoState extends State<AgentInfo> {
                 children: [
                   Text(
                     agentName ?? 'Loading...',
-                    style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.primary),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary, 
+                      fontFamily: Theme.of(context).textTheme.titleLarge!.fontFamily, 
+                      fontWeight: FontWeight.bold,
+                      fontSize: 42, 
+                    ),
                   ),
                   const SizedBox(height: 15),
                   Padding(
