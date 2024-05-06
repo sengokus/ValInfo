@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'main.dart';
 import 'riotapi.dart';
 
 class AgentInfo extends StatefulWidget {
@@ -47,10 +46,9 @@ class _AgentInfoState extends State<AgentInfo> {
                   Text(
                     agentName ?? 'Loading...',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary, 
-                      fontFamily: Theme.of(context).textTheme.titleLarge!.fontFamily, 
-                      fontWeight: FontWeight.bold,
-                      fontSize: 42, 
+                      color: Theme.of(context).textTheme.titleMedium!.color,
+                      fontFamily: Theme.of(context).textTheme.titleMedium!.fontFamily, 
+                      fontSize: Theme.of(context).textTheme.titleMedium!.fontSize, 
                     ),
                   ),
                   const SizedBox(height: 15),

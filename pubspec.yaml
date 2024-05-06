@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_fonts: ^4.0.4
   http: ^0.13.6
   val_api: ^0.0.3
 
@@ -49,3 +50,7 @@ flutter:
         - asset: fonts/MARKPROHEAVY.OTF
         - asset: fonts/MARKPROLIGHT.OTF
         - asset: fonts/MARKPROMEDIUM.OTF
+
+    - family: Bebas Neue
+      fonts:
+        - asset: fonts/BebasNeue-Regular.ttf
