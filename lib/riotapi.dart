@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -6,15 +7,14 @@ Future<Map<String, dynamic>> fetchValApiData() async {
   const String agentsUrl = 'https://valorant-api.com/v1/agents';
 
   // Fetching agents data
-  final agentResponse =
-      await http.get(Uri.parse(agentsUrl));
+  final agentResponse = await http.get(Uri.parse(agentsUrl));
 
   if (agentResponse.statusCode == 200) {
     final Map<String, dynamic> agentsData = json.decode(agentResponse.body);
     final List<dynamic> agents = agentsData['data'];
 
     // LAST AGENT IS AT INDEX 24
-    final agent = agents[23];
+    final agent = agents[0];
     return {
       'displayName': agent['displayName'],
       'fullPortrait': agent['fullPortrait'],

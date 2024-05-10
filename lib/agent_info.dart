@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-
-import 'riotapi.dart';
+import 'agent_tabbar.dart';
 
 class AgentInfo extends StatefulWidget {
-  const AgentInfo({super.key});
+  final dynamic agent;
 
+  const AgentInfo({
+    required this.agent,
+    super.key,
+  }) ;
+  
   @override
   _AgentInfoState createState() => _AgentInfoState();
 }
@@ -13,23 +17,22 @@ class _AgentInfoState extends State<AgentInfo> {
   String? agentName;
   String? agentPhotoUrl;
   String? agentDescription;
-  String? agentIcon; 
-
-  // Function to fetch agent data
-  Future<void> fetchAgentData() async {
-    final agentData = await fetchValApiData();
-    setState(() {
-      agentName = agentData['displayName'];
-      agentPhotoUrl = agentData['fullPortrait'];
-      agentDescription = agentData['description'];
-      agentIcon = agentData['agentIcon'];
-    });
-  }
+  String? agentIcon;
 
   @override
   void initState() {
     super.initState();
-    fetchAgentData();
+    fetchAgentData(widget.agent);
+  }
+
+  // Function to fetch agent data
+  Future<void> fetchAgentData(dynamic agent) async {
+    setState(() {
+      agentName = agent['displayName'];
+      agentPhotoUrl = agent['fullPortrait'];
+      agentDescription = agent['description'];
+      agentIcon = agent['displayIcon'];
+    });
   }
 
   @override
@@ -58,17 +61,17 @@ class _AgentInfoState extends State<AgentInfo> {
                       agentPhotoUrl!,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Container(
-                      color: Colors.black,
-                      child: Image.network(
-                        agentIcon!,
-                        height: 50,
-                        width: 50,
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8),
+                  //   child: Container(
+                  //     color: Colors.black,
+                  //     child: Image.network(
+                  //       agentIcon!,
+                  //       height: 50,
+                  //       width: 50,
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
@@ -77,9 +80,12 @@ class _AgentInfoState extends State<AgentInfo> {
                       textAlign: TextAlign.justify,
                     ),
                   ),
+                agentTab(),
                 ],
               )
-            : const CircularProgressIndicator(),
+            : const CircularProgressIndicator(
+              color: Color.fromARGB(255, 250, 68, 84),
+            ),
       ),
     );
   }
