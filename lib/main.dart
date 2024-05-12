@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'agent_info.dart';
 import 'onboarding.dart';
+import 'signin.dart';
 import 'riotapi.dart';
 
 void main() {
@@ -15,22 +16,19 @@ void main() {
 class MainApp extends StatelessWidget {
   final Map<String, dynamic> agentData;
 
-  const MainApp({
-    required this.agentData,
-    super.key
-    });
+  const MainApp({required this.agentData, super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateRoute: (settings) {
-        if (settings.name == '/agentInfoPage') {
-          return PageRouteBuilder(pageBuilder: (_, __, ___) => AgentInfo(agent: agentData));
-        }
+      // onGenerateRoute: (settings) {
+      //   if (settings.name == '/agentInfoPage') {
+      //     return PageRouteBuilder(
+      //         pageBuilder: (_, __, ___) => AgentInfo(agent: agentData));
+      //   }
 
-        return null;
-      },
-
+      //   return null;
+      // },
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -41,7 +39,7 @@ class MainApp extends StatelessWidget {
         textTheme: const TextTheme(
           titleLarge: TextStyle(
             fontFamily: 'Valorant',
-            fontSize: 60, 
+            fontSize: 60,
           ),
           titleMedium: TextStyle(
             color: Color.fromARGB(255, 235, 240, 176),
@@ -51,10 +49,11 @@ class MainApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      // initialRoute: '/agentInfoPage',
+      initialRoute: '/signInPage',
       routes: {
         '/': (context) => const Onboarding(),
-        // '/agentInfoPage': (context) => AgentInfo(agent: agentData),
+        '/signInPage': (context) => const SignIn(),
+        '/agentInfoPage': (context) => AgentInfo(agent: agentData),
       },
     );
   }
