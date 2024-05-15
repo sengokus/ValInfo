@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:valinfo/specific_agent_info.dart';
 // import 'package:valinfo/agent_tabbar.dart';
 // import 'package:google_fonts/google_fonts.dart'; // Package to use Google Fonts
 
@@ -16,7 +17,9 @@ void main() {
 class MainApp extends StatelessWidget {
   final Map<String, dynamic> agentData;
 
-  const MainApp({required this.agentData, super.key});
+  const MainApp({
+    required this.agentData,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +52,20 @@ class MainApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/signInPage',
+      initialRoute: '/agentInfoPage',
       routes: {
         '/': (context) => const Onboarding(),
-        '/signInPage': (context) => const SignIn(),
         '/agentInfoPage': (context) => AgentInfo(agent: agentData),
+        'specificAgentPage': (context) {
+          final agentName = agentData['displayName'] ?? '';
+          final agentPhotoUrl = agentData['fullPortrait'] ?? '';
+          final agentDescription = agentData['description'] ?? '';
+          return AgentDetailsPage(
+            agentName: agentName,
+            agentPhotoUrl: agentPhotoUrl,
+            agentDescription: agentDescription,
+          );
+        },
       },
     );
   }
