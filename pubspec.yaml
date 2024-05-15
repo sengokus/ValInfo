@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_fonts: ^4.0.4
+  http: ^0.13.6
   val_api: ^0.0.3
 
 dev_dependencies:
@@ -18,3 +20,37 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Valorant
+      fonts:
+        - asset: fonts/Valorant Font.ttf
+
+    - family: Din Next
+      fonts:
+        - asset: fonts/DINNextW1G-Black.otf
+        - asset: fonts/DINNextW1G-BlackItalic.otf
+        - asset: fonts/DINNextW1G-Bold.otf
+        - asset: fonts/DINNextW1G-BoldItalic.otf
+        - asset: fonts/DINNextW1G-Heavy.otf
+        - asset: fonts/DINNextW1G-HeavyItalic.otf
+        - asset: fonts/DINNextW1G-Italic.otf
+        - asset: fonts/DINNextW1G-Light.otf
+        - asset: fonts/DINNextW1G-Medium.otf
+        - asset: fonts/DINNextW1G-MediumItalic.otf
+        - asset: fonts/DINNextW1G-Regular.otf
+        - asset: fonts/DINNextW1G-UltraLight.otf
+        - asset: fonts/DINNextW1G-UltraLightIt.otf
+
+    - family: Mark Pro
+      fonts:
+        - asset: fonts/MARKPRO.OTF
+        - asset: fonts/MARKPROBOLD.OTF
+        - asset: fonts/MARKPROBOOK.OTF
+        - asset: fonts/MARKPROEXTRALIGHT.OTF
+        - asset: fonts/MARKPROHEAVY.OTF
+        - asset: fonts/MARKPROLIGHT.OTF
+        - asset: fonts/MARKPROMEDIUM.OTF
+
+    - family: Bebas Neue
+      fonts:
+        - asset: fonts/BebasNeue-Regular.ttf

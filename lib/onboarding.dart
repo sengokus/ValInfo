@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:val_api/val_api.dart'; // Import Valorant API
+
+const actId = 'your-act-id';
+
+
 class Onboarding extends StatelessWidget {
   const Onboarding({super.key});
 
