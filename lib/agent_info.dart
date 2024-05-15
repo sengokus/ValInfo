@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:valinfo/agent_info_button.dart';
 import 'agent_tabbar.dart';
+import 'specific_agent_info.dart';
 
 class AgentInfo extends StatefulWidget {
   final dynamic agent;
@@ -7,8 +9,8 @@ class AgentInfo extends StatefulWidget {
   const AgentInfo({
     required this.agent,
     super.key,
-  }) ;
-  
+  });
+
   @override
   _AgentInfoState createState() => _AgentInfoState();
 }
@@ -31,7 +33,6 @@ class _AgentInfoState extends State<AgentInfo> {
       agentName = agent['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
       agentDescription = agent['description'];
-      agentIcon = agent['displayIcon'];
     });
   }
 
@@ -50,8 +51,10 @@ class _AgentInfoState extends State<AgentInfo> {
                     agentName ?? 'Loading...',
                     style: TextStyle(
                       color: Theme.of(context).textTheme.titleMedium!.color,
-                      fontFamily: Theme.of(context).textTheme.titleMedium!.fontFamily, 
-                      fontSize: Theme.of(context).textTheme.titleMedium!.fontSize, 
+                      fontFamily:
+                          Theme.of(context).textTheme.titleMedium!.fontFamily,
+                      fontSize:
+                          Theme.of(context).textTheme.titleMedium!.fontSize,
                     ),
                   ),
                   const SizedBox(height: 15),
@@ -73,19 +76,40 @@ class _AgentInfoState extends State<AgentInfo> {
                   //   ),
                   // ),
                   Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      agentDescription ?? 'Loading...',
-                      style: const TextStyle(fontSize: 15, height: 1.5,),
-                      textAlign: TextAlign.justify,
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        agentInfoButton(
+                          buttonText: "FAVORITE",
+                          onPressed: () {
+                            // ADD FAVORITE HERE
+                          },
+                        ),
+                        const SizedBox(width: 5),
+                        agentInfoButton(
+                          buttonText: "VIEW CONTRACT",
+                          onPressed: (){
+                            Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AgentDetailsPage(
+                                      agentName: agentName!,
+                                      agentPhotoUrl: agentPhotoUrl!,
+                                      agentDescription: agentDescription!,
+                                    ),
+                                  ),
+                                );
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                agentTab(),
+                  agentTab(),
                 ],
               )
             : const CircularProgressIndicator(
-              color: Color.fromARGB(255, 250, 68, 84),
-            ),
+                color: Color.fromARGB(255, 250, 68, 84),
+              ),
       ),
     );
   }

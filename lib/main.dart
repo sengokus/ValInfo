@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:valinfo/specific_agent_info.dart';
 // import 'package:valinfo/agent_tabbar.dart';
 // import 'package:google_fonts/google_fonts.dart'; // Package to use Google Fonts
 
@@ -17,20 +18,11 @@ class MainApp extends StatelessWidget {
 
   const MainApp({
     required this.agentData,
-    super.key
-    });
+  });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateRoute: (settings) {
-        if (settings.name == '/agentInfoPage') {
-          return PageRouteBuilder(pageBuilder: (_, __, ___) => AgentInfo(agent: agentData));
-        }
-
-        return null;
-      },
-
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -51,10 +43,20 @@ class MainApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      // initialRoute: '/agentInfoPage',
+      initialRoute: '/agentInfoPage',
       routes: {
         '/': (context) => const Onboarding(),
-        // '/agentInfoPage': (context) => AgentInfo(agent: agentData),
+        '/agentInfoPage': (context) => AgentInfo(agent: agentData),
+        'specificAgentPage': (context) {
+          final agentName = agentData['displayName'] ?? '';
+          final agentPhotoUrl = agentData['fullPortrait'] ?? '';
+          final agentDescription = agentData['description'] ?? '';
+          return AgentDetailsPage(
+            agentName: agentName,
+            agentPhotoUrl: agentPhotoUrl,
+            agentDescription: agentDescription,
+          );
+        },
       },
     );
   }
