@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'agent_info.dart';
+import 'package:valinfo/pages/agent_info.dart';
 
 Widget agentTab() {
   return FutureBuilder(

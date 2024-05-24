@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:valinfo/specific_agent_info.dart';
+import 'package:valinfo/pages/specific_agent_info.dart';
 // import 'package:valinfo/agent_tabbar.dart';
 // import 'package:google_fonts/google_fonts.dart'; // Package to use Google Fonts
 
-import 'agent_info.dart';
-import 'onboarding.dart';
-import 'signin.dart';
-import 'riotapi.dart';
+import 'package:valinfo/pages/agent_info.dart';
+import 'package:valinfo/pages/onboarding.dart';
+import 'package:valinfo/utils/riotapi.dart';
 
 void main() {
   fetchValApiData().then((agentData) {
@@ -19,6 +18,7 @@ class MainApp extends StatelessWidget {
 
   const MainApp({
     required this.agentData,
+    super.key,
   });
 
   @override
