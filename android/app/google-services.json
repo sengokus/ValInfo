@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "811516444415",
+    "project_id": "valinfo-5aa53",
+    "storage_bucket": "valinfo-5aa53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811516444415:android:fdfa091cc2455e896856ca",
+        "android_client_info": {
+          "package_name": "com.example.valinfo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyrqYuZLL581__CNPYe2WqUgvsAMIOIDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

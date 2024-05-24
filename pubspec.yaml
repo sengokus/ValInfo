@@ -7,10 +7,14 @@ environment:
   sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
+  cloud_firestore: ^4.17.4
+  firebase_auth: ^4.19.6
+  firebase_core: ^2.31.1
   flutter:
     sdk: flutter
   google_fonts: ^4.0.4
   http: ^0.13.6
+  provider: ^6.1.2
   val_api: ^0.0.3
 
 dev_dependencies:
