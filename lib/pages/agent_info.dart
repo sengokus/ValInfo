@@ -123,14 +123,14 @@ class _AgentInfoState extends State<AgentInfo> {
                     padding: const EdgeInsets.all(20),
                     child: Row(
                       children: [
-                        agentInfoButton(
+                        AgentInfoButton(
                           buttonText: "FAVORITE",
                           onPressed: () {
                             // ADD FAVORITE HERE
                           },
                         ),
                         const SizedBox(width: 5),
-                        agentInfoButton(
+                        AgentInfoButton(
                           buttonText: "VIEW CONTRACT",
                           onPressed: () {
                             Navigator.push(

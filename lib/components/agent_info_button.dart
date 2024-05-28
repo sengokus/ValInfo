@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-class agentInfoButton extends StatelessWidget {
+class AgentInfoButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback? onPressed;
 
-  const agentInfoButton({
+  const AgentInfoButton({
     required this.buttonText,
     this.onPressed,
+    super.key,
   });
 
   @override
