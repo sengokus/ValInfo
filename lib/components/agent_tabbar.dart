@@ -24,13 +24,13 @@ Widget agentTab() {
                         context,
                         PageRouteBuilder(
                           pageBuilder: (_, __, ___) => AgentInfo(agent: agent),
-                          transitionDuration: const Duration(
-                              seconds: 0), // Remove zoom animation
+                          // Remove zoom animation
+                          transitionDuration: const Duration(seconds: 0),
                         ),
                       );
                     },
                     child: Container(
-                      width: 45,
+                      width: 55,
                       margin: const EdgeInsets.symmetric(horizontal: 1.0),
                       decoration: BoxDecoration(
                         color: Colors.grey[200],

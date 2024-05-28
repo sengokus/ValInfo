@@ -88,12 +88,11 @@ class _AgentInfoState extends State<AgentInfo> {
                     fit: BoxFit.fitHeight,
                     height: 500, loadingBuilder: (BuildContext context,
                         Widget child, ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: Color.fromARGB(255, 250, 68, 84),
-                    ),
-                  );
+                  if (loadingProgress == null) {
+                    return child;
+                  }
+                  // Return a SizedBox of the same height as the image while it is loading
+                  return const SizedBox(height: 500);
                 }),
               ),
             ],
