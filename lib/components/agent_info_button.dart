@@ -33,7 +33,7 @@ class AgentInfoButton extends StatelessWidget {
           child: Text(
             buttonText,
             style: TextStyle(
-              color: Theme.of(context).textTheme.titleMedium!.color,
+              color: Colors.white,
               fontFamily: Theme.of(context).textTheme.titleSmall!.fontFamily,
               fontSize: Theme.of(context).textTheme.titleSmall!.fontSize,
             ),
