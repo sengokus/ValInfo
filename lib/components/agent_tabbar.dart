@@ -23,6 +23,7 @@ class AgentTab extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
+                  // Create icons for each agent
                   for (final agent in snapshot.data!)
                     InkWell(
                       onTap: () {
