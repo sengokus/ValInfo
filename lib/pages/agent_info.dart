@@ -126,13 +126,14 @@ class _AgentInfoState extends State<AgentInfo> {
                     child: Row(
                       children: [
                         AgentInfoButton(
-                          buttonText: "FAVORITE",
                           onPressed: () {
                             // ADD FAVORITE HERE
                             setState(() {
                               isPressedFavorite = !isPressedFavorite;
                             });
                           },
+                          buttonText:
+                              isPressedFavorite ? "FAVORITED" : "FAVORITE",
                           backgroundColor: isPressedFavorite
                               ? Theme.of(context).indicatorColor
                               : null,
