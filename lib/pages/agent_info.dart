@@ -20,6 +20,7 @@ class _AgentInfoState extends State<AgentInfo> {
   String? agentPhotoUrl;
   String? agentDescription;
   String? agentIcon;
+  String? agentType;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _AgentInfoState extends State<AgentInfo> {
   Future<void> fetchAgentData(dynamic agent) async {
     setState(() {
       agentName = agent['displayName'];
+      agentType = agent.role['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
       agentDescription = agent['description'];
     });
@@ -51,29 +53,61 @@ class _AgentInfoState extends State<AgentInfo> {
                     clipBehavior: Clip.none,
                     alignment: AlignmentDirectional.centerEnd,
                     children: [
-                      Text(
-                        agentName ?? 'Loading...',
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.titleMedium!.color,
-                          fontFamily: Theme.of(context).textTheme.titleMedium!.fontFamily,
-                          fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
+                      Positioned(
+                        top: 50,
+                        child: Column(
+                          children: [
+                            Text(
+                              agentName ?? 'Loading...',
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .color,
+                                fontFamily: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .fontFamily,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .fontSize,
+                              ),
+                            ),
+                            Text(
+                              agentType ?? 'Loading...',
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .color,
+                                fontFamily: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .fontFamily,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .fontSize,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8),
-                        child: Image.network(
-                          agentPhotoUrl!,
-                          fit: BoxFit.fitHeight,
-                          height: 800,
-                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                color: Color.fromARGB(255, 250, 68, 84),
-                              ),
-                            );
-                          }
-                        ),
+                        child: Image.network(agentPhotoUrl!,
+                            fit: BoxFit.fitHeight,
+                            height: 800, loadingBuilder: (BuildContext context,
+                                Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: Color.fromARGB(255, 250, 68, 84),
+                            ),
+                          );
+                        }),
                       ),
                     ],
                   ),
