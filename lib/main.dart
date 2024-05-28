@@ -39,6 +39,7 @@ class MainApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         primaryColor: const Color.fromARGB(255, 250, 68, 84),
+        indicatorColor: const Color.fromARGB(99, 118, 225, 255),
         textTheme: const TextTheme(
             titleLarge: TextStyle(
               fontFamily: 'Valorant',

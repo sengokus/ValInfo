@@ -22,6 +22,8 @@ class _AgentInfoState extends State<AgentInfo> {
   String? agentIcon;
   // String? agentType;
 
+  bool isPressedFavorite = false;
+
   @override
   void initState() {
     super.initState();
@@ -127,7 +129,13 @@ class _AgentInfoState extends State<AgentInfo> {
                           buttonText: "FAVORITE",
                           onPressed: () {
                             // ADD FAVORITE HERE
+                            setState(() {
+                              isPressedFavorite = !isPressedFavorite;
+                            });
                           },
+                          backgroundColor: isPressedFavorite
+                              ? Theme.of(context).indicatorColor
+                              : null,
                         ),
                         const SizedBox(width: 5),
                         AgentInfoButton(

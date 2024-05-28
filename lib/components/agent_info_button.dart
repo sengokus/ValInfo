@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class AgentInfoButton extends StatelessWidget {
   final String buttonText;
+  final Color? backgroundColor;
   final VoidCallback? onPressed;
 
   const AgentInfoButton({
     required this.buttonText,
+    this.backgroundColor,
     this.onPressed,
     super.key,
   });
@@ -26,6 +28,7 @@ class AgentInfoButton extends StatelessWidget {
               color: Colors.white, // Set the color of the border
               width: .5, // Set the width of the border
             ),
+            backgroundColor: backgroundColor,
           ),
           child: Text(
             buttonText,
