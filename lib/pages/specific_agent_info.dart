@@ -26,24 +26,43 @@ class AgentDetailsPage extends StatelessWidget {
                 fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
               ),
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Image.network(
-                agentPhotoUrl,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                agentDescription,
-                style: const TextStyle(
-                  fontSize: 15,
-                  height: 1.5,
+            Stack(
+              children: [
+                Image.network(
+                  agentPhotoUrl,
+                  fit: BoxFit.fitHeight,
+                  height: 600,
                 ),
-                textAlign: TextAlign.justify,
-              ),
+                Positioned(
+                  bottom: 50,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.black54,
+                        border: Border(
+                          top: BorderSide(
+                            color: Colors.white, 
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      child: Text(
+                        agentDescription,
+                        style: TextStyle(
+                          fontSize: 15,
+                          height: 1.5,
+                          color: Theme.of(context).textTheme.titleMedium!.color, 
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
