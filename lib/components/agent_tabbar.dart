@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:valinfo/pages/agent_info.dart';
 
 Widget agentTab() {
+  bool _onPressed = false;
+
   return FutureBuilder(
     future: fetchAgents(),
     builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -20,6 +22,7 @@ Widget agentTab() {
                 for (final agent in snapshot.data!)
                   InkWell(
                     onTap: () {
+                      _onPressed = !_onPressed;
                       Navigator.push(
                         context,
                         PageRouteBuilder(
@@ -31,9 +34,15 @@ Widget agentTab() {
                     },
                     child: Container(
                       width: 55,
-                      margin: const EdgeInsets.symmetric(horizontal: 1.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 4.0),
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: Theme.of(context).hoverColor,
+                        border: Border.all(
+                          color: _onPressed
+                              ? Theme.of(context).indicatorColor
+                              : Colors.white30,
+                          width: 1,
+                        ),
                       ),
                       child: Image.network(
                         agent['displayIcon'],

@@ -40,6 +40,7 @@ class MainApp extends StatelessWidget {
         ),
         primaryColor: const Color.fromARGB(255, 250, 68, 84),
         indicatorColor: const Color.fromARGB(99, 118, 225, 255),
+        hoverColor: const Color.fromARGB(20, 219, 219, 219),
         textTheme: const TextTheme(
             titleLarge: TextStyle(
               fontFamily: 'Valorant',
