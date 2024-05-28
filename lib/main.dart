@@ -3,9 +3,9 @@ import 'package:valinfo/pages/specific_agent_info.dart';
 // import 'package:valinfo/agent_tabbar.dart';
 // import 'package:google_fonts/google_fonts.dart'; // Package to use Google Fonts
 
-import 'pages/agent_info.dart';
-import 'pages/onboarding.dart';
-import 'utils/riotapi.dart';
+import 'package:valinfo/pages/agent_info.dart';
+import 'package:valinfo/pages/onboarding.dart';
+import 'package:valinfo/utils/riotapi.dart';
 
 void main() {
   fetchValApiData().then((agentData) {
@@ -24,6 +24,14 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // onGenerateRoute: (settings) {
+      //   if (settings.name == '/agentInfoPage') {
+      //     return PageRouteBuilder(
+      //         pageBuilder: (_, __, ___) => AgentInfo(agent: agentData));
+      //   }
+
+      //   return null;
+      // },
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -35,7 +43,7 @@ class MainApp extends StatelessWidget {
         textTheme: const TextTheme(
           titleLarge: TextStyle(
             fontFamily: 'Valorant',
-            fontSize: 60, 
+            fontSize: 60,
           ),
 
           titleMedium: TextStyle(

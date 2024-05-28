@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:valinfo/components/agent_info_button.dart';
-import '../components/agent_tabbar.dart';
+import 'package:valinfo/components/agent_tabbar.dart';
 import 'specific_agent_info.dart';
 
 class AgentInfo extends StatefulWidget {
@@ -101,17 +101,17 @@ class _AgentInfoState extends State<AgentInfo> {
                         const SizedBox(width: 5),
                         agentInfoButton(
                           buttonText: "VIEW CONTRACT",
-                          onPressed: (){
+                          onPressed: () {
                             Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AgentDetailsPage(
-                                      agentName: agentName!,
-                                      agentPhotoUrl: agentPhotoUrl!,
-                                      agentDescription: agentDescription!,
-                                    ),
-                                  ),
-                                );
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AgentDetailsPage(
+                                  agentName: agentName!,
+                                  agentPhotoUrl: agentPhotoUrl!,
+                                  agentDescription: agentDescription!,
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ],

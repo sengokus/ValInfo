@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-import '../pages/agent_info.dart';
+import 'package:valinfo/pages/agent_info.dart';
 
 Widget agentTab() {
   return FutureBuilder(
@@ -25,7 +24,8 @@ Widget agentTab() {
                         context,
                         PageRouteBuilder(
                           pageBuilder: (_, __, ___) => AgentInfo(agent: agent),
-                          transitionDuration: const Duration(seconds: 0), // Remove zoom animation
+                          transitionDuration: const Duration(
+                              seconds: 0), // Remove zoom animation
                         ),
                       );
                     },
@@ -51,12 +51,14 @@ Widget agentTab() {
 }
 
 Future<List<dynamic>> fetchAgents() async {
-  final response = await http.get(Uri.parse('https://valorant-api.com/v1/agents'));
+  final response =
+      await http.get(Uri.parse('https://valorant-api.com/v1/agents'));
   final data = jsonDecode(response.body);
   final List<dynamic> agents = data['data'];
-  
+
   // Filter out the duplicate Sova from the API
-  final playableAgents = agents.where((agent) => agent['isPlayableCharacter'] == true).toList();
+  final playableAgents =
+      agents.where((agent) => agent['isPlayableCharacter'] == true).toList();
 
   return playableAgents;
 }
