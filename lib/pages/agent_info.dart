@@ -12,15 +12,16 @@ class AgentInfo extends StatefulWidget {
   });
 
   @override
-  _AgentInfoState createState() => _AgentInfoState();
+  AgentInfoState createState() => AgentInfoState();
 }
 
-class _AgentInfoState extends State<AgentInfo> {
+class AgentInfoState extends State<AgentInfo> {
   String? agentName;
   String? agentPhotoUrl;
   String? agentDescription;
   String? agentIcon;
   // String? agentType;
+  Color? color;
 
   bool isPressedFavorite = false;
 
@@ -37,6 +38,7 @@ class _AgentInfoState extends State<AgentInfo> {
       // agentType = agent.role['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
       agentDescription = agent['description'];
+      color = Theme.of(context).indicatorColor;
     });
   }
 
@@ -143,7 +145,9 @@ class _AgentInfoState extends State<AgentInfo> {
               ],
             ),
           ),
-          agentTab(),
+          AgentTab(
+            color: Theme.of(context).hoverColor,
+          ),
         ],
       )),
     );
