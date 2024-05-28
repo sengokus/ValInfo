@@ -50,15 +50,16 @@ class _AgentInfoState extends State<AgentInfo> {
         child: agentPhotoUrl != null
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Stack(
                     clipBehavior: Clip.none,
                     alignment: AlignmentDirectional.bottomEnd,
                     children: [
                       Positioned(
-                        top: 50,
+                        top: 20,
+                        right: 20,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
                               agentName ?? 'Loading...',
