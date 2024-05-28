@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:valinfo/components/agent_info_button.dart';
 import 'package:valinfo/components/agent_tabbar.dart';
@@ -20,8 +21,6 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentPhotoUrl;
   String? agentDescription;
   String? agentIcon;
-  // String? agentType;
-  Color? color;
 
   bool isPressedFavorite = false;
 
@@ -35,15 +34,16 @@ class AgentInfoState extends State<AgentInfo> {
   Future<void> fetchAgentData(dynamic agent) async {
     setState(() {
       agentName = agent['displayName'];
-      // agentType = agent.role['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
       agentDescription = agent['description'];
-      color = Theme.of(context).indicatorColor;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isCurrentAgent = widget.agent['displayName'] == agentName;
+    log("isCurrentAge: ${widget.agent['displayName']}, agent: $agentName, $isCurrentAgent");
+
     return Scaffold(
       // appBar: AppBar(
       //   title: const Text('Agent Info'),
@@ -99,17 +99,6 @@ class AgentInfoState extends State<AgentInfo> {
               ),
             ],
           ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8),
-          //   child: Container(
-          //     color: Colors.black,
-          //     child: Image.network(
-          //       agentIcon!,
-          //       height: 50,
-          //       width: 50,
-          //     ),
-          //   ),
-          // ),
           Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
@@ -146,7 +135,9 @@ class AgentInfoState extends State<AgentInfo> {
             ),
           ),
           AgentTab(
-            color: Theme.of(context).hoverColor,
+            color: isCurrentAgent
+                ? Theme.of(context).indicatorColor
+                : Colors.transparent,
           ),
         ],
       )),
