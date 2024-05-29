@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:valinfo/components/agent_info_button.dart';
 import 'package:valinfo/components/agent_tabbar.dart';
@@ -12,16 +13,14 @@ class AgentInfo extends StatefulWidget {
   });
 
   @override
-  _AgentInfoState createState() => _AgentInfoState();
+  AgentInfoState createState() => AgentInfoState();
 }
 
-class _AgentInfoState extends State<AgentInfo> {
-  // Agent Info
+class AgentInfoState extends State<AgentInfo> {
   String? agentName;
   String? agentPhotoUrl;
   String? agentDescription;
   String? agentIcon;
-  // String? agentType;
 
   // Agent Roles Info
   String? agentRoleName;
@@ -40,10 +39,19 @@ class _AgentInfoState extends State<AgentInfo> {
   }
   
   // Function to fetch agent data
-  Future<void> fetchAgentData(dynamic agent) async {
+  void fetchAgentData(dynamic agent) {
+    log("Fetching data for: ${agent['displayName']}");
+
     setState(() {
       agentName = agent['displayName'];
-      // agentType = agent.role['displayName'];
+      agentPhotoUrl = agent['fullPortrait'];
+      agentDescription = agent['description'];
+    });
+  }
+
+  void updateSelectedAgent(dynamic agent) {
+    setState(() {
+      agentName = agent['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
       agentDescription = agent['description'];
       agentRoleName = agent['role'] != null ? agent['role']['displayName'] : null;
@@ -55,71 +63,69 @@ class _AgentInfoState extends State<AgentInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Agent Info'),
-      // ),
-      body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            alignment: AlignmentDirectional.bottomEnd,
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          alignment: AlignmentDirectional.bottomEnd,
+          children: [
+            Positioned(
+              top: 20,
+              right: 20,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    agentName ?? 'Loading...',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.titleMedium!.color,
+                      fontFamily:
+                          Theme.of(context).textTheme.titleMedium!.fontFamily,
+                      fontSize:
+                          Theme.of(context).textTheme.titleMedium!.fontSize,
+                    ),
+                  ),
+                  Text(
+                    agentName ?? 'Loading...',
+                    style: TextStyle(
+                      fontFamily:
+                          Theme.of(context).textTheme.titleSmall!.fontFamily,
+                      fontSize:
+                          Theme.of(context).textTheme.titleSmall!.fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Image.network(agentPhotoUrl!,
+                  fit: BoxFit.fitHeight,
+                  height: 500, loadingBuilder: (BuildContext context,
+                      Widget child, ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return const SizedBox(height: 500);
+              }),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
             children: [
-              Positioned(
-                top: 20,
-                right: 20,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      agentName ?? 'Loading...',
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.titleMedium!.color,
-                        fontFamily:
-                            Theme.of(context).textTheme.titleMedium!.fontFamily,
-                        fontSize:
-                            Theme.of(context).textTheme.titleMedium!.fontSize,
-                      ),
-                    ),
-                    Text(
-                      agentName ?? 'Loading...',
-                      style: TextStyle(
-                        fontFamily:
-                            Theme.of(context).textTheme.titleSmall!.fontFamily,
-                        fontSize:
-                            Theme.of(context).textTheme.titleSmall!.fontSize,
-                      ),
-                    ),
-                  ],
-                ),
+              AgentInfoButton(
+                onPressed: () {
+                  setState(() {
+                    isPressedFavorite = !isPressedFavorite;
+                  });
+                },
+                buttonText: isPressedFavorite ? "FAVORITED" : "FAVORITE",
+                backgroundColor:
+                    isPressedFavorite ? Theme.of(context).indicatorColor : null,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Image.network(agentPhotoUrl!,
-                    fit: BoxFit.fitHeight,
-                    height: 500, loadingBuilder: (BuildContext context,
-                        Widget child, ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  }
-                  // Return a SizedBox of the same height as the image while it is loading
-                  return const SizedBox(height: 500);
-                }),
-              ),
-            ],
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8),
-          //   child: Container(
-          //     color: Colors.black,
-          //     child: Image.network(
-          //       agentIcon!,
-          //       height: 50,
-          //       width: 50,
-          //     ),
-          //   ),
-          // ),
           Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
@@ -152,15 +158,18 @@ class _AgentInfoState extends State<AgentInfo> {
                             agentRoleDescription: agentRoleDescription ?? 'Loading',
                         ),
                       ),
-                    );
-                  },
-                ),
-              ],
-            ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-          agentTab(),
-        ],
-      )),
-    );
+        ),
+        AgentTab(
+          color: Theme.of(context).indicatorColor,
+          onAgentSelected: updateSelectedAgent,
+        ),
+      ],
+    ));
   }
 }
