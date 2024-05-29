@@ -56,7 +56,7 @@ class AgentInfoState extends State<AgentInfo> {
       agentName = agent['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
       agentDescription = agent['description'];
-      agentRoleName = agent['role']['displayName'];
+      agentRoleName = agent['role'] != null ? agent['role']['displayName'] : null;
     });
   }
 
@@ -87,7 +87,7 @@ class AgentInfoState extends State<AgentInfo> {
                     ),
                   ),
                   Text(
-                    agentName ?? 'Loading...',
+                    agentRoleName ?? 'Loading...',
                     style: TextStyle(
                       fontFamily:
                           Theme.of(context).textTheme.titleSmall!.fontFamily,

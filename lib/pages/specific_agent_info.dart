@@ -16,6 +16,7 @@ class AgentDetailsPage extends StatelessWidget {
     required this.agentRole,
     required this.agentRoleIcon,
     required this.agentRoleDescription,
+    super.key,
     //required this.agentAbilities,
   });
 
@@ -84,7 +85,7 @@ class AgentDetailsPage extends StatelessWidget {
                       ),
                       Text(
                         agentRoleDescription,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                           height: 1.5,
                           color: Colors.white,
