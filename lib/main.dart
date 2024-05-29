@@ -65,10 +65,14 @@ class MainApp extends StatelessWidget {
           final agentName = agentData['displayName'] ?? '';
           final agentPhotoUrl = agentData['fullPortrait'] ?? '';
           final agentDescription = agentData['description'] ?? '';
+          final agentRoleName = agentData['agentRoleName'] ?? '' ;
+          //final agentAbilities = agentData['abilities']?.cast<String>() ?? [];
           return AgentDetailsPage(
             agentName: agentName,
             agentPhotoUrl: agentPhotoUrl,
             agentDescription: agentDescription,
+            agentRole: agentRoleName,
+            //agentAbilities: agentAbilities,
           );
         },
       },

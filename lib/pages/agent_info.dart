@@ -21,6 +21,9 @@ class _AgentInfoState extends State<AgentInfo> {
   String? agentDescription;
   String? agentIcon;
   // String? agentType;
+  String? agentRoleName;
+  String? agentRoleIcon;
+  //List<String>? agentAbilities;
 
   bool isPressedFavorite = false;
 
@@ -29,7 +32,7 @@ class _AgentInfoState extends State<AgentInfo> {
     super.initState();
     fetchAgentData(widget.agent);
   }
-
+  
   // Function to fetch agent data
   Future<void> fetchAgentData(dynamic agent) async {
     setState(() {
@@ -37,6 +40,8 @@ class _AgentInfoState extends State<AgentInfo> {
       // agentType = agent.role['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
       agentDescription = agent['description'];
+      agentRoleName = agent['role'] != null ? agent['role']['displayName'] : null;
+      agentRoleIcon = agent['role'] != null ? agent['role']['displayIcon'] : null;
     });
   }
 
@@ -132,9 +137,10 @@ class _AgentInfoState extends State<AgentInfo> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => AgentDetailsPage(
-                          agentName: agentName!,
-                          agentPhotoUrl: agentPhotoUrl!,
-                          agentDescription: agentDescription!,
+                            agentName: agentName!,
+                            agentPhotoUrl: agentPhotoUrl!,
+                            agentDescription: agentDescription!,
+                            agentRole: agentRoleName ?? 'Loading'
                         ),
                       ),
                     );

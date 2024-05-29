@@ -4,11 +4,15 @@ class AgentDetailsPage extends StatelessWidget {
   final String agentName;
   final String agentPhotoUrl;
   final String agentDescription;
+  final String agentRole;
+  //final List<String> agentAbilities;
 
   const AgentDetailsPage({
     required this.agentName,
     required this.agentPhotoUrl,
     required this.agentDescription,
+    required this.agentRole,
+    //required this.agentAbilities,
   });
 
   @override
@@ -50,14 +54,43 @@ class AgentDetailsPage extends StatelessWidget {
                         ),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      child: Text(
-                        agentDescription,
-                        style: TextStyle(
-                          fontSize: 15,
-                          height: 1.5,
-                          color: Theme.of(context).textTheme.titleMedium!.color, 
-                        ),
-                        textAlign: TextAlign.justify,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Role: $agentRole',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).textTheme.titleMedium!.color, 
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Abilities:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).textTheme.titleMedium!.color, 
+                            ),
+                          ),
+                          /*for (var ability in agentAbilities)
+                            Text(
+                              '- $ability',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Theme.of(context).textTheme.titleMedium!.color, 
+                              ),
+                            ), */
+                          const SizedBox(height: 8),
+                          Text(
+                            agentDescription,
+                            style: TextStyle(
+                              fontSize: 15,
+                              height: 1.5,
+                              color: Theme.of(context).textTheme.titleMedium!.color, 
+                            ),
+                            textAlign: TextAlign.justify,
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -14,12 +14,13 @@ Future<Map<String, dynamic>> fetchValApiData() async {
     final List<dynamic> agents = agentsData['data'];
 
     // LAST AGENT IS AT INDEX 24
-    final agent = agents[0];
+    final agent = agents[1];
     return {
       'displayName': agent['displayName'],
       'fullPortrait': agent['fullPortrait'],
       'description': agent['description'],
       'agentIcon' : agent['displayIcon'],
+      'agentRoleName': agent['role']['displayName'],
     };
   } else {
     throw Exception('Failed to fetch agents data: ${agentResponse.statusCode}');
