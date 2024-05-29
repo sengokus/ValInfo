@@ -31,7 +31,17 @@ class AgentInfoState extends State<AgentInfo> {
   }
 
   // Function to fetch agent data
-  Future<void> fetchAgentData(dynamic agent) async {
+  void fetchAgentData(dynamic agent) {
+    log("Fetching data for: ${agent['displayName']}");
+
+    setState(() {
+      agentName = agent['displayName'];
+      agentPhotoUrl = agent['fullPortrait'];
+      agentDescription = agent['description'];
+    });
+  }
+
+  void updateSelectedAgent(dynamic agent) {
     setState(() {
       agentName = agent['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
@@ -41,106 +51,94 @@ class AgentInfoState extends State<AgentInfo> {
 
   @override
   Widget build(BuildContext context) {
-    bool isCurrentAgent = widget.agent['displayName'] == agentName;
-    log("isCurrentAge: ${widget.agent['displayName']}, agent: $agentName, $isCurrentAgent");
-
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Agent Info'),
-      // ),
-      body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            alignment: AlignmentDirectional.bottomEnd,
-            children: [
-              Positioned(
-                top: 20,
-                right: 20,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      agentName ?? 'Loading...',
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.titleMedium!.color,
-                        fontFamily:
-                            Theme.of(context).textTheme.titleMedium!.fontFamily,
-                        fontSize:
-                            Theme.of(context).textTheme.titleMedium!.fontSize,
-                      ),
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          alignment: AlignmentDirectional.bottomEnd,
+          children: [
+            Positioned(
+              top: 20,
+              right: 20,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    agentName ?? 'Loading...',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.titleMedium!.color,
+                      fontFamily:
+                          Theme.of(context).textTheme.titleMedium!.fontFamily,
+                      fontSize:
+                          Theme.of(context).textTheme.titleMedium!.fontSize,
                     ),
-                    Text(
-                      agentName ?? 'Loading...',
-                      style: TextStyle(
-                        fontFamily:
-                            Theme.of(context).textTheme.titleSmall!.fontFamily,
-                        fontSize:
-                            Theme.of(context).textTheme.titleSmall!.fontSize,
-                      ),
+                  ),
+                  Text(
+                    agentName ?? 'Loading...',
+                    style: TextStyle(
+                      fontFamily:
+                          Theme.of(context).textTheme.titleSmall!.fontFamily,
+                      fontSize:
+                          Theme.of(context).textTheme.titleSmall!.fontSize,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Image.network(agentPhotoUrl!,
-                    fit: BoxFit.fitHeight,
-                    height: 500, loadingBuilder: (BuildContext context,
-                        Widget child, ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  }
-                  // Return a SizedBox of the same height as the image while it is loading
-                  return const SizedBox(height: 500);
-                }),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Image.network(agentPhotoUrl!,
+                  fit: BoxFit.fitHeight,
+                  height: 500, loadingBuilder: (BuildContext context,
+                      Widget child, ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return const SizedBox(height: 500);
+              }),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              AgentInfoButton(
+                onPressed: () {
+                  setState(() {
+                    isPressedFavorite = !isPressedFavorite;
+                  });
+                },
+                buttonText: isPressedFavorite ? "FAVORITED" : "FAVORITE",
+                backgroundColor:
+                    isPressedFavorite ? Theme.of(context).indicatorColor : null,
+              ),
+              const SizedBox(width: 5),
+              AgentInfoButton(
+                buttonText: "VIEW CONTRACT",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AgentDetailsPage(
+                        agentName: agentName!,
+                        agentPhotoUrl: agentPhotoUrl!,
+                        agentDescription: agentDescription!,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                AgentInfoButton(
-                  onPressed: () {
-                    // ADD FAVORITE HERE
-                    setState(() {
-                      isPressedFavorite = !isPressedFavorite;
-                    });
-                  },
-                  buttonText: isPressedFavorite ? "FAVORITED" : "FAVORITE",
-                  backgroundColor: isPressedFavorite
-                      ? Theme.of(context).indicatorColor
-                      : null,
-                ),
-                const SizedBox(width: 5),
-                AgentInfoButton(
-                  buttonText: "VIEW CONTRACT",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AgentDetailsPage(
-                          agentName: agentName!,
-                          agentPhotoUrl: agentPhotoUrl!,
-                          agentDescription: agentDescription!,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-          AgentTab(
-            color: isCurrentAgent
-                ? Theme.of(context).indicatorColor
-                : Colors.transparent,
-          ),
-        ],
-      )),
-    );
+        ),
+        AgentTab(
+          color: Theme.of(context).indicatorColor,
+          onAgentSelected: updateSelectedAgent,
+        ),
+      ],
+    ));
   }
 }

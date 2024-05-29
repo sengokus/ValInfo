@@ -1,15 +1,26 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:valinfo/pages/agent_info.dart';
 
-class AgentTab extends StatelessWidget {
+class AgentTab extends StatefulWidget {
   final Color? color;
+  final Function(dynamic) onAgentSelected;
 
-  const AgentTab({this.color, super.key});
+  const AgentTab({this.color, required this.onAgentSelected, super.key});
+
+  @override
+  AgentTabState createState() => AgentTabState();
+}
+
+class AgentTabState extends State<AgentTab> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(
+        context); // Invoke the overridden method from AutomaticKeepAliveClientMixin
+
     return FutureBuilder(
       future: fetchAgents(),
       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -23,25 +34,16 @@ class AgentTab extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  // Create icons for each agent
                   for (final agent in snapshot.data!)
                     InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (_, __, ___) =>
-                                AgentInfo(agent: agent),
-                            // Remove zoom animation
-                            transitionDuration: const Duration(seconds: 0),
-                          ),
-                        );
+                        widget.onAgentSelected(agent);
                       },
                       child: Container(
                         width: 60,
                         margin: const EdgeInsets.symmetric(horizontal: 4.0),
                         decoration: BoxDecoration(
-                          color: color,
+                          color: widget.color,
                           border: Border.all(
                             color: Colors.white30,
                             width: 1,
