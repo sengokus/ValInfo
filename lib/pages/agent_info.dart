@@ -57,6 +57,8 @@ class AgentInfoState extends State<AgentInfo> {
       agentPhotoUrl = agent['fullPortrait'];
       agentDescription = agent['description'];
       agentRoleName = agent['role'] != null ? agent['role']['displayName'] : null;
+      agentRoleIcon = agent['role'] != null ? agent['role']['displayIcon'] : null;
+      agentRoleDescription = agent['role'] != null ? agent['role']['description'] : null;
     });
   }
 
