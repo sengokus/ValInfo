@@ -16,13 +16,19 @@ class AgentInfo extends StatefulWidget {
 }
 
 class _AgentInfoState extends State<AgentInfo> {
+  // Agent Info
   String? agentName;
   String? agentPhotoUrl;
   String? agentDescription;
   String? agentIcon;
   // String? agentType;
+
+  // Agent Roles Info
   String? agentRoleName;
   String? agentRoleIcon;
+  String? agentRoleDescription;
+
+  // Agent Abilities
   //List<String>? agentAbilities;
 
   bool isPressedFavorite = false;
@@ -42,6 +48,7 @@ class _AgentInfoState extends State<AgentInfo> {
       agentDescription = agent['description'];
       agentRoleName = agent['role'] != null ? agent['role']['displayName'] : null;
       agentRoleIcon = agent['role'] != null ? agent['role']['displayIcon'] : null;
+      agentRoleDescription = agent['role'] != null ? agent['role']['description'] : null;
     });
   }
 
@@ -140,7 +147,9 @@ class _AgentInfoState extends State<AgentInfo> {
                             agentName: agentName!,
                             agentPhotoUrl: agentPhotoUrl!,
                             agentDescription: agentDescription!,
-                            agentRole: agentRoleName ?? 'Loading'
+                            agentRole: agentRoleName ?? 'Loading',
+                            agentRoleIcon: agentRoleIcon ?? 'Loading', 
+                            agentRoleDescription: agentRoleDescription ?? 'Loading',
                         ),
                       ),
                     );
