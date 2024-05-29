@@ -20,6 +20,9 @@ Future<Map<String, dynamic>> fetchValApiData() async {
       'fullPortrait': agent['fullPortrait'],
       'description': agent['description'],
       'agentIcon' : agent['displayIcon'],
+      'agentRoleName': agent['role']['displayName'],
+      'agentRoleIcon': agent['role']['displayIcon'],
+      'agentRoleDescription': agent['role']['description'],
     };
   } else {
     throw Exception('Failed to fetch agents data: ${agentResponse.statusCode}');
