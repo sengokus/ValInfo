@@ -22,6 +22,14 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentDescription;
   String? agentIcon;
 
+  // Agent Roles Info
+  String? agentRoleName;
+  String? agentRoleIcon;
+  String? agentRoleDescription;
+
+  // Agent Abilities
+  //List<String>? agentAbilities;
+
   bool isPressedFavorite = false;
 
   @override
@@ -29,7 +37,7 @@ class AgentInfoState extends State<AgentInfo> {
     super.initState();
     fetchAgentData(widget.agent);
   }
-
+  
   // Function to fetch agent data
   void fetchAgentData(dynamic agent) {
     log("Fetching data for: ${agent['displayName']}");
@@ -46,6 +54,9 @@ class AgentInfoState extends State<AgentInfo> {
       agentName = agent['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
       agentDescription = agent['description'];
+      agentRoleName = agent['role'] != null ? agent['role']['displayName'] : null;
+      agentRoleIcon = agent['role'] != null ? agent['role']['displayIcon'] : null;
+      agentRoleDescription = agent['role'] != null ? agent['role']['description'] : null;
     });
   }
 
@@ -115,17 +126,37 @@ class AgentInfoState extends State<AgentInfo> {
                 backgroundColor:
                     isPressedFavorite ? Theme.of(context).indicatorColor : null,
               ),
-              const SizedBox(width: 5),
-              AgentInfoButton(
-                buttonText: "VIEW CONTRACT",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AgentDetailsPage(
-                        agentName: agentName!,
-                        agentPhotoUrl: agentPhotoUrl!,
-                        agentDescription: agentDescription!,
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                AgentInfoButton(
+                  onPressed: () {
+                    // ADD FAVORITE HERE
+                    setState(() {
+                      isPressedFavorite = !isPressedFavorite;
+                    });
+                  },
+                  buttonText: isPressedFavorite ? "FAVORITED" : "FAVORITE",
+                  backgroundColor: isPressedFavorite
+                      ? Theme.of(context).indicatorColor
+                      : null,
+                ),
+                const SizedBox(width: 5),
+                AgentInfoButton(
+                  buttonText: "VIEW CONTRACT",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AgentDetailsPage(
+                            agentName: agentName!,
+                            agentPhotoUrl: agentPhotoUrl!,
+                            agentDescription: agentDescription!,
+                            agentRole: agentRoleName ?? 'Loading',
+                            agentRoleIcon: agentRoleIcon ?? 'Loading', 
+                            agentRoleDescription: agentRoleDescription ?? 'Loading',
+                        ),
                       ),
                     ),
                   );
