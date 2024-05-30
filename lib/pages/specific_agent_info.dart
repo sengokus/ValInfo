@@ -33,7 +33,7 @@ class AgentDetailsPage extends StatelessWidget {
             Image.network(
               agentPhotoUrl,
               fit: BoxFit.fitHeight,
-              height: 600,
+              height: 800,
             ),
             Positioned(
               bottom: 50,
@@ -105,10 +105,12 @@ class AgentDetailsPage extends StatelessWidget {
                 top: 10,
                 right: 20,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       agentName,
                       style: TextStyle(
+                        height: 1.0,
                         color: Theme.of(context).textTheme.titleMedium!.color,
                         fontFamily:
                             Theme.of(context).textTheme.titleMedium!.fontFamily,
@@ -117,12 +119,13 @@ class AgentDetailsPage extends StatelessWidget {
                       ),
                     ),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: SizedBox(
-                              width: 20,
-                              height: 20,
+                              width: 12,
+                              height: 12,
                               child: Image.network(
                                 agentRoleIcon != 'Loading'
                                     ? agentRoleIcon
@@ -132,9 +135,13 @@ class AgentDetailsPage extends StatelessWidget {
                         ),
                         Text(
                           agentRole != 'Loading' ? agentRole : 'Initiator',
-                          style: const TextStyle(
+                          style: TextStyle(
+                            height: 0.2,
+                            fontFamily: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .fontFamily,
                             fontSize: 16,
-                            color: Colors.white,
                           ),
                         ),
                       ],

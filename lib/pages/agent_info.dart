@@ -23,7 +23,6 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentPhotoUrl;
   String? agentDescription;
   String? agentIcon;
-
   String? agentRoleName;
   String? agentRoleIcon;
   String? agentRoleDescription;
@@ -197,18 +196,41 @@ class AgentInfoState extends State<AgentInfo> {
                                                   ),
                                                 ],
                                               ),
-                                              Text(
-                                                agentRoleName != null
-                                                    ? agentRoleName ??
-                                                        'Loading...'
-                                                    : 'Initiator',
-                                                style: TextStyle(
-                                                  fontFamily: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .fontFamily,
-                                                  fontSize: 16,
-                                                ),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: SizedBox(
+                                                        width: 12,
+                                                        height: 12,
+                                                        child: Image.network(
+                                                          agentRoleIcon != null
+                                                              ? agentRoleIcon ??
+                                                                  'Loading...'
+                                                              : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
+                                                          fit: BoxFit.cover,
+                                                        )),
+                                                  ),
+                                                  Text(
+                                                    agentRoleName != null
+                                                        ? agentRoleName ??
+                                                            'Loading...'
+                                                        : 'Initiator',
+                                                    style: TextStyle(
+                                                      height: 0.2,
+                                                      fontFamily:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .titleSmall!
+                                                              .fontFamily,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
