@@ -234,7 +234,7 @@ class AgentInfoState extends State<AgentInfo> {
 
   void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
     setState(() {
-      _currentPageIndex = selectedAgent['index'];
+      // _currentPageIndex = selectedAgent['index'];
       fetchAgentData(selectedAgent['agent']);
       _pageController.jumpToPage(_currentPageIndex);
     });
