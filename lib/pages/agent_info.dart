@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // For storing favorites to local storage
 import 'package:valinfo/components/agent_info_button.dart';
 import 'package:valinfo/components/agent_tabbar.dart';
 import 'specific_agent_info.dart';
@@ -68,6 +69,7 @@ class AgentInfoState extends State<AgentInfo> {
   // Future to initialize data
   Future<void> initData() async {
     await fetchAgents(); // Fetch agents list
+    await loadFavorites(); // Fetch favorites list
     await fetchAgentData(widget.agent);
   }
 
@@ -143,6 +145,16 @@ class AgentInfoState extends State<AgentInfo> {
     });
   }
 
+  // Load favorites from local storage
+  Future<void> loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favoriteList = prefs.getStringList('favorites') ?? [];
+    setState(() {
+      isFavorite =
+          agents.map((agent) => favoriteList.contains(agent['uuid'])).toList();
+    });
+  }
+
   // Update screen based on selected agent
   void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
     setState(() {
@@ -153,9 +165,25 @@ class AgentInfoState extends State<AgentInfo> {
   }
 
   // Add agent to favorites
-  void addToFavorite(Map<String, dynamic> selectedAgent) {
+  void addToFavorite(Map<String, dynamic> selectedAgent) async {
     setState(() {
       isFavorite[selectedAgent['index']] = !isFavorite[selectedAgent['index']];
+    });
+
+    final prefs = await SharedPreferences.getInstance();
+    final favoriteList = isFavorite
+        .asMap()
+        .entries
+        .where((entry) => entry.value)
+        .map((entry) => agents[entry.key]['uuid'] as String)
+        .toList();
+    prefs.setStringList('favorites', favoriteList);
+  }
+
+  // Add this method to your AgentInfoState class
+  void removeFromFavorites(int index) {
+    setState(() {
+      isFavorite[index] = false;
     });
   }
 
@@ -170,6 +198,7 @@ class AgentInfoState extends State<AgentInfo> {
                     child:
                         CircularProgressIndicator()); // Show a loading spinner
               } else if (snapshot.hasError) {
+                log("Error: ${snapshot.error}");
                 return const Center(
                     child: Text('Error loading data')); // Handle errors
               } else {
