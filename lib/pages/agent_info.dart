@@ -457,6 +457,8 @@ class AgentInfoState extends State<AgentInfo> {
     setState(() {
       agents =
           agentsList.where((agent) => agent['isPlayableCharacter']).toList();
+      isFavorite =
+          List<bool>.filled(agents.length, false); // Initialize isFavorite list
     });
   }
 
@@ -561,7 +563,7 @@ class AgentInfoState extends State<AgentInfo> {
                         );
                       })),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
