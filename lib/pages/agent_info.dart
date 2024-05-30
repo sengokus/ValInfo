@@ -134,11 +134,12 @@ class AgentInfoState extends State<AgentInfo> {
                   buttonText: isPressedFavorite ? "FAVORITED" : "FAVORITE",
                   backgroundColor: isPressedFavorite
                       ? Theme.of(context).indicatorColor
-                      : null,
+                      : Theme.of(context).hoverColor,
                 ),
                 const SizedBox(width: 5),
                 AgentInfoButton(
                   buttonText: "VIEW CONTRACT",
+                  backgroundColor: Theme.of(context).hoverColor,
                   onPressed: () {
                     Navigator.push(
                       context,
