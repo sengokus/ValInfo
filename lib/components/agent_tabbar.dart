@@ -260,7 +260,7 @@ class AgentTabState extends State<AgentTab> with AutomaticKeepAliveClientMixin {
             margin: const EdgeInsets.symmetric(horizontal: 4.0),
             decoration: BoxDecoration(
               color: index == widget.currentIndex
-                  ? Colors.blue
+                  ? Theme.of(context).indicatorColor
                   : widget.color, // Highlight the selected agent
               border: Border.all(
                 color: Colors.white30,

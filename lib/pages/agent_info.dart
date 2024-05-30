@@ -546,7 +546,7 @@ class AgentInfoState extends State<AgentInfo> {
                         );
                       })),
               AgentTab(
-                color: Theme.of(context).indicatorColor,
+                color: Theme.of(context).hoverColor,
                 onAgentSelected: updateSelectedAgent,
                 currentIndex: _currentPageIndex, // Pass the current index
                 agents: agents, // Pass the agents list
