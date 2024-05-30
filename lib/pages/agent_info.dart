@@ -563,47 +563,51 @@ class AgentInfoState extends State<AgentInfo> {
                         );
                       })),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
+                    Expanded(
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: AgentInfoButton(
+                            onPressed: () {
+                              addToFavorite({
+                                'index': _currentPageIndex,
+                                'agent': agents[_currentPageIndex],
+                              });
+                            },
+                            buttonText: isFavorite[_currentPageIndex]
+                                ? 'FAVORITED'
+                                : 'FAVORITE',
+                            backgroundColor: isFavorite[_currentPageIndex]
+                                ? Theme.of(context).indicatorColor
+                                : Theme.of(context).hoverColor,
+                          )),
+                    ),
+                    Expanded(
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: AgentInfoButton(
+                          buttonText: 'VIEW CONTRACT',
                           onPressed: () {
-                            addToFavorite({
-                              'index': _currentPageIndex,
-                              'agent': agents[_currentPageIndex],
-                            });
-                          },
-                          buttonText: isFavorite[_currentPageIndex]
-                              ? 'FAVORITED'
-                              : 'FAVORITE',
-                          backgroundColor: isFavorite[_currentPageIndex]
-                              ? Theme.of(context).indicatorColor
-                              : Theme.of(context).hoverColor,
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: AgentInfoButton(
-                        buttonText: 'VIEW CONTRACT',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AgentDetailsPage(
-                                agentName: agentName!,
-                                agentPhotoUrl: agentPhotoUrl!,
-                                agentDescription: agentDescription!,
-                                agentRole: agentRoleName ?? 'Loading',
-                                agentRoleIcon: agentRoleIcon ?? 'Loading',
-                                agentRoleDescription:
-                                    agentRoleDescription ?? 'Loading',
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AgentDetailsPage(
+                                  agentName: agentName!,
+                                  agentPhotoUrl: agentPhotoUrl!,
+                                  agentDescription: agentDescription!,
+                                  agentRole: agentRoleName ?? 'Loading',
+                                  agentRoleIcon: agentRoleIcon ?? 'Loading',
+                                  agentRoleDescription:
+                                      agentRoleDescription ?? 'Loading',
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        backgroundColor: Theme.of(context).hoverColor,
+                            );
+                          },
+                          backgroundColor: Theme.of(context).hoverColor,
+                        ),
                       ),
                     ),
                   ],
