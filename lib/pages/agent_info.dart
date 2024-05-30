@@ -538,11 +538,13 @@ class AgentInfoState extends State<AgentInfo> {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Padding(
                                                     padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
+                                                        const EdgeInsets.only(
+                                                            right: 8.0),
                                                     child: isFavorite[
                                                             _currentPageIndex]
                                                         ? const Icon(Icons.star,
@@ -557,6 +559,7 @@ class AgentInfoState extends State<AgentInfo> {
                                                   Text(
                                                     agentName ?? 'Loading...',
                                                     style: TextStyle(
+                                                      height: 1.0,
                                                       color: Theme.of(context)
                                                           .textTheme
                                                           .titleMedium!
