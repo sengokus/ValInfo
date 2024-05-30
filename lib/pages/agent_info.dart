@@ -409,6 +409,22 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentRoleIcon;
   String? agentRoleDescription;
 
+  String? agentAbility1Name; 
+  String? agentAbility1Icon;
+  String? agentAbility1Description; 
+  
+  String? agentAbility2Name; 
+  String? agentAbility2Icon;
+  String? agentAbility2Description; 
+  
+  String? agentAbility3Name; 
+  String? agentAbility3Icon;
+  String? agentAbility3Description; 
+  
+  String? agentAbility4Name; 
+  String? agentAbility4Icon;
+  String? agentAbility4Description; 
+
   bool isPressedFavorite = false;
   late PageController _pageController;
   int _currentPageIndex = 0;
@@ -430,8 +446,8 @@ class AgentInfoState extends State<AgentInfo> {
 
 // Function to fetch agent data
   void fetchAgentData(dynamic agent) {
-    log("Fetching data for: ${agent['displayName']} : ${agent['role'] != null ? agent['role']['displayName'] : null}");
-
+    //log("Fetching data for: ${agent['displayName']} : ${agent['role'] != null ? agent['role']['displayName'] : null}");
+    log("Fetching data for not: ${agent['displayName']} : ${agent['abilities'] != null ? agent['abilities'][3]['displayName'] : null}");
     setState(() {
       agentName = agent['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
@@ -442,7 +458,36 @@ class AgentInfoState extends State<AgentInfo> {
           agent['role'] != null ? agent['role']['displayIcon'] : null;
       agentRoleDescription =
           agent['role'] != null ? agent['role']['description'] : null;
+
+      agentAbility1Name =
+          agent['abilities'] != null ? agent['abilities'][0]['displayName'] : null;
+      agentAbility1Icon =
+          agent['abilities'] != null ? agent['abilities'][0]['displayIcon'] : null;
+      agentAbility1Description =
+          agent['abilities'] != null ? agent['abilities'][0]['description'] : null;
+      
+      agentAbility2Name =
+          agent['abilities'] != null ? agent['abilities'][1]['displayName'] : null;
+      agentAbility2Icon =
+          agent['abilities'] != null ? agent['abilities'][1]['displayIcon'] : null;
+      agentAbility2Description =
+          agent['abilities'] != null ? agent['abilities'][1]['description'] : null;
+
+      agentAbility3Name =
+          agent['abilities'] != null ? agent['abilities'][2]['displayName'] : null;
+      agentAbility3Icon =
+          agent['abilities'] != null ? agent['abilities'][2]['displayIcon'] : null;
+      agentAbility3Description =
+          agent['abilities'] != null ? agent['abilities'][2]['description'] : null; 
+
+      agentAbility4Name =
+          agent['abilities'] != null ? agent['abilities'][3]['displayName'] : null;
+      agentAbility4Icon =
+          agent['abilities'] != null ? agent['abilities'][3]['displayIcon'] : null;
+      agentAbility4Description =
+          agent['abilities'] != null ? agent['abilities'][3]['description'] : null;
     });
+     
   }
 
   // Fetch the list of agents

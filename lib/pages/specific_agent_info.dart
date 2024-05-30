@@ -7,6 +7,22 @@ class AgentDetailsPage extends StatelessWidget {
   final String agentRole;
   final String agentRoleIcon;
   final String agentRoleDescription;
+
+  final String agentAbility1Name;
+  final String agentAbility1Description;
+  final String agentAbility1Icon; 
+
+  final String agentAbility2Name;
+  final String agentAbility2Description;
+  final String agentAbility2Icon; 
+
+  final String agentAbility3Name;
+  final String agentAbility3Description;
+  final String agentAbility3Icon; 
+
+  final String agentAbility4Name;
+  final String agentAbility4Description;
+  final String agentAbility4Icon; 
   //final List<String> agentAbilities;
 
   const AgentDetailsPage({
@@ -16,6 +32,22 @@ class AgentDetailsPage extends StatelessWidget {
     required this.agentRole,
     required this.agentRoleIcon,
     required this.agentRoleDescription,
+
+    required this.agentAbility1Name,
+    required this.agentAbility1Description,
+    required this.agentAbility1Icon, 
+
+    required this.agentAbility2Name,
+    required this.agentAbility2Description,
+    required this.agentAbility2Icon, 
+
+    required this.agentAbility3Name,
+    required this.agentAbility3Description,
+    required this.agentAbility3Icon, 
+
+    required this.agentAbility4Name,
+    required this.agentAbility4Description,
+    required this.agentAbility4Icon, 
     super.key,
     //required this.agentAbilities,
   });
