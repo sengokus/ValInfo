@@ -537,22 +537,43 @@ class AgentInfoState extends State<AgentInfo> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.end,
                                             children: [
-                                              Text(
-                                                agentName ?? 'Loading...',
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .color,
-                                                  fontFamily: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .fontFamily,
-                                                  fontSize: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .fontSize,
-                                                ),
+                                              Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: isFavorite[
+                                                            _currentPageIndex]
+                                                        ? const Icon(Icons.star,
+                                                            color: Colors.white)
+                                                        : Icon(
+                                                            Icons
+                                                                .star_border_outlined,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .indicatorColor),
+                                                  ),
+                                                  Text(
+                                                    agentName ?? 'Loading...',
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .color,
+                                                      fontFamily:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .titleMedium!
+                                                              .fontFamily,
+                                                      fontSize:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .titleMedium!
+                                                              .fontSize,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                               Text(
                                                 agentRoleName ?? 'Loading...',
@@ -561,10 +582,7 @@ class AgentInfoState extends State<AgentInfo> {
                                                       .textTheme
                                                       .titleSmall!
                                                       .fontFamily,
-                                                  fontSize: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .fontSize,
+                                                  fontSize: 16,
                                                 ),
                                               ),
                                             ],
