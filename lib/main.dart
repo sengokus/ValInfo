@@ -68,6 +68,22 @@ class MainApp extends StatelessWidget {
           final agentRoleName = agentData['agentRoleName'] ?? '';
           final agentRoleIcon = agentData['role']['displayIcon'] ?? '';
           final agentRoleDescription = agentData['agentRoleName'] ?? '';
+          
+          final agentAbility1Name = agentData['abilities'][0]['displayName'] ?? '';
+          final agentAbility1Icon = agentData['abilities'][0]['displayIcon'] ?? '';
+          final agentAbility1Description = agentData['abilities'][0]['description'] ?? '';
+
+          final agentAbility2Name = agentData['abilities'][1]['displayName'] ?? '';
+          final agentAbility2Icon = agentData['abilities'][1]['displayIcon'] ?? '';
+          final agentAbility2Description = agentData['abilities'][1]['description'] ?? '';
+
+          final agentAbility3Name = agentData['abilities'][2]['displayName'] ?? '';
+          final agentAbility3Icon = agentData['abilities'][2]['displayIcon'] ?? '';
+          final agentAbility3Description = agentData['abilities'][2]['description'] ?? '';
+
+          final agentAbility4Name = agentData['abilities'][3]['displayName'] ?? '';
+          final agentAbility4Icon = agentData['abilities'][3]['displayIcon'] ?? '';
+          final agentAbility4Description = agentData['abilities'][3]['description'] ?? '';
 
           //final agentAbilities = agentData['abilities']?.cast<String>() ?? [];
           return AgentDetailsPage(
@@ -77,6 +93,19 @@ class MainApp extends StatelessWidget {
             agentRole: agentRoleName,
             agentRoleDescription: agentRoleDescription,
             agentRoleIcon: agentRoleIcon,
+            agentAbility1Name: agentAbility1Name,
+            agentAbility1Description: agentAbility1Description,
+            agentAbility1Icon: agentAbility1Icon,
+            agentAbility2Name: agentAbility2Name,
+            agentAbility2Description: agentAbility2Description,
+            agentAbility2Icon: agentAbility2Icon,
+            agentAbility3Name: agentAbility3Name,
+            agentAbility3Description: agentAbility3Description,
+            agentAbility3Icon: agentAbility3Icon,
+            agentAbility4Name: agentAbility4Name,
+            agentAbility4Description: agentAbility4Description,
+            agentAbility4Icon: agentAbility4Icon,
+            
             //agentAbilities: agentAbilities,
           );
         },
