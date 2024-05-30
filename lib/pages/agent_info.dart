@@ -203,6 +203,8 @@ class AgentInfoState extends State<AgentInfo> {
                     child: Text('Error loading data')); // Handle errors
               } else {
                 return Container(
+                    height: double.infinity,
+                    width: double.infinity,
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [

@@ -56,13 +56,23 @@ class AgentDetailsPage extends StatelessWidget {
     log("Role Description: $agentRoleDescription");
 
     return Scaffold(
-      body: Center(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff3e606c), Color(0xff4c7a8a), Color(0xff222042)],
+            stops: [0, 0.12, 1],
+            begin: Alignment(-0.4, -1.0),
+            end: Alignment(1.9, 2.3),
+          ),
+        ),
         child: Stack(
           children: [
             Image.network(
               agentPhotoUrl,
               fit: BoxFit.fitHeight,
-              height: 800,
+              height: 700,
             ),
             Positioned(
               bottom: 50,
