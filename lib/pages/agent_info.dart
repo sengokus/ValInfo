@@ -585,7 +585,26 @@ class AgentInfoState extends State<AgentInfo> {
                         )),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: AgentInfoButton(buttonText: 'VIEW CONTRACT'),
+                      child: AgentInfoButton(
+                        buttonText: 'VIEW CONTRACT',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AgentDetailsPage(
+                                agentName: agentName!,
+                                agentPhotoUrl: agentPhotoUrl!,
+                                agentDescription: agentDescription!,
+                                agentRole: agentRoleName ?? 'Loading',
+                                agentRoleIcon: agentRoleIcon ?? 'Loading',
+                                agentRoleDescription:
+                                    agentRoleDescription ?? 'Loading',
+                              ),
+                            ),
+                          );
+                        },
+                        backgroundColor: Theme.of(context).hoverColor,
+                      ),
                     ),
                   ],
                 ),
