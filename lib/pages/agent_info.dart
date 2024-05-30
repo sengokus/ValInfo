@@ -428,7 +428,7 @@ class AgentInfoState extends State<AgentInfo> {
     super.dispose();
   }
 
-  // Function to fetch agent data
+// Function to fetch agent data
   void fetchAgentData(dynamic agent) {
     log("Fetching data for: ${agent['displayName']} : ${agent['role'] != null ? agent['role']['displayName'] : null}");
 
@@ -455,6 +455,14 @@ class AgentInfoState extends State<AgentInfo> {
     setState(() {
       agents =
           agentsList.where((agent) => agent['isPlayableCharacter']).toList();
+    });
+  }
+
+  void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
+    setState(() {
+      _currentPageIndex = selectedAgent['index'];
+      fetchAgentData(selectedAgent['agent']);
+      _pageController.jumpToPage(_currentPageIndex);
     });
   }
 
