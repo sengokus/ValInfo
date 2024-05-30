@@ -12,19 +12,19 @@ class AgentDetailsPage extends StatelessWidget {
 
   final String agentAbility1Name;
   final String agentAbility1Description;
-  final String agentAbility1Icon; 
+  final String agentAbility1Icon;
 
   final String agentAbility2Name;
   final String agentAbility2Description;
-  final String agentAbility2Icon; 
+  final String agentAbility2Icon;
 
   final String agentAbility3Name;
   final String agentAbility3Description;
-  final String agentAbility3Icon; 
+  final String agentAbility3Icon;
 
   final String agentAbility4Name;
   final String agentAbility4Description;
-  final String agentAbility4Icon; 
+  final String agentAbility4Icon;
   //final List<String> agentAbilities;
 
   const AgentDetailsPage({
@@ -34,22 +34,18 @@ class AgentDetailsPage extends StatelessWidget {
     required this.agentRole,
     required this.agentRoleIcon,
     required this.agentRoleDescription,
-
     required this.agentAbility1Name,
     required this.agentAbility1Description,
-    required this.agentAbility1Icon, 
-
+    required this.agentAbility1Icon,
     required this.agentAbility2Name,
     required this.agentAbility2Description,
-    required this.agentAbility2Icon, 
-
+    required this.agentAbility2Icon,
     required this.agentAbility3Name,
     required this.agentAbility3Description,
-    required this.agentAbility3Icon, 
-
+    required this.agentAbility3Icon,
     required this.agentAbility4Name,
     required this.agentAbility4Description,
-    required this.agentAbility4Icon, 
+    required this.agentAbility4Icon,
     super.key,
     //required this.agentAbilities,
   });
@@ -57,6 +53,7 @@ class AgentDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log("Role: $agentRole : $agentRoleIcon");
+    log("Role Description: $agentRoleDescription");
 
     return Scaffold(
       body: Center(
@@ -108,7 +105,9 @@ class AgentDetailsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        agentRole.toUpperCase(),
+                        agentRole != 'Loading'
+                            ? agentRole.toUpperCase()
+                            : 'INITIATOR',
                         style: TextStyle(
                           fontFamily: Theme.of(context)
                               .textTheme
@@ -120,7 +119,9 @@ class AgentDetailsPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        agentRoleDescription,
+                        agentRoleDescription != 'Loading'
+                            ? agentRoleDescription
+                            : 'Initiators challenge angles by setting up their team to enter contested ground and push defenders away.',
                         style: const TextStyle(
                           fontSize: 15,
                           height: 1.5,
