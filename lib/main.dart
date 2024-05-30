@@ -66,7 +66,7 @@ class MainApp extends StatelessWidget {
           final agentPhotoUrl = agentData['fullPortrait'] ?? '';
           final agentDescription = agentData['description'] ?? '';
           final agentRoleName = agentData['agentRoleName'] ?? '';
-          final agentRoleIcon = agentData['agentRoleName'] ?? '';
+          final agentRoleIcon = agentData['role']['displayIcon'] ?? '';
           final agentRoleDescription = agentData['agentRoleName'] ?? '';
 
           //final agentAbilities = agentData['abilities']?.cast<String>() ?? [];
