@@ -414,7 +414,7 @@ class AgentInfoState extends State<AgentInfo> {
   late PageController _pageController;
   int _currentPageIndex = 0;
   List<dynamic> agents = []; // Store the agents list
-  List<bool> isFavorite = [];
+  List<bool> isFavorite = []; // Store favorites in list
 
   @override
   void initState() {
@@ -432,7 +432,7 @@ class AgentInfoState extends State<AgentInfo> {
 
   // Function to fetch agent data
   void fetchAgentData(dynamic agent) {
-    log("Fetching data for: ${agent['displayName']} : ${agent['role'] != null ? agent['role']['displayName'] : null}");
+    log("Fetching data for: ${agent['displayName']} : ${agent['role'] != null ? agent['role']['displayName'] : null}"); // Debug
 
     setState(() {
       agentName = agent['displayName'];
@@ -462,6 +462,7 @@ class AgentInfoState extends State<AgentInfo> {
     });
   }
 
+  // Update screen based on selected agent
   void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
     setState(() {
       _currentPageIndex = selectedAgent['index'];
@@ -470,6 +471,7 @@ class AgentInfoState extends State<AgentInfo> {
     });
   }
 
+  // Add agent to favorites
   void addToFavorite(Map<String, dynamic> selectedAgent) {
     setState(() {
       isFavorite[selectedAgent['index']] = !isFavorite[selectedAgent['index']];
@@ -500,64 +502,60 @@ class AgentInfoState extends State<AgentInfo> {
                         });
                       },
                       itemBuilder: (context, index) {
-                        return Column(
+                        return Stack(
+                          alignment: AlignmentDirectional.bottomEnd,
                           children: [
-                            Stack(
-                              alignment: AlignmentDirectional.bottomEnd,
-                              children: [
-                                Positioned(
-                                  top: 20,
-                                  right: 20,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        agentName ?? 'Loading...',
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium!
-                                              .color,
-                                          fontFamily: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium!
-                                              .fontFamily,
-                                          fontSize: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium!
-                                              .fontSize,
-                                        ),
-                                      ),
-                                      Text(
-                                        agentRoleName ?? 'Loading...',
-                                        style: TextStyle(
-                                          fontFamily: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .fontFamily,
-                                          fontSize: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .fontSize,
-                                        ),
-                                      ),
-                                    ],
+                            Positioned(
+                              top: 20,
+                              right: 20,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    agentName ?? 'Loading...',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .color,
+                                      fontFamily: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .fontFamily,
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .fontSize,
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Image.network(agentPhotoUrl!,
-                                      fit: BoxFit.fitHeight, height: 610,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    }
-                                    return const SizedBox(height: 500);
-                                  }),
-                                ),
-                              ],
+                                  Text(
+                                    agentRoleName ?? 'Loading...',
+                                    style: TextStyle(
+                                      fontFamily: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .fontFamily,
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .fontSize,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Image.network(agentPhotoUrl!,
+                                  fit: BoxFit.fitHeight, height: 610,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return const SizedBox(height: 500);
+                              }),
                             ),
                           ],
                         );
@@ -572,6 +570,11 @@ class AgentInfoState extends State<AgentInfo> {
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: AgentInfoButton(
                             onPressed: () {
+                              isFavorite[_currentPageIndex]
+                                  ? log(
+                                      "Removed agent ${agents[_currentPageIndex]['displayName']} to favorites.")
+                                  : log(
+                                      "Added agent ${agents[_currentPageIndex]['displayName']} from favorites.");
                               addToFavorite({
                                 'index': _currentPageIndex,
                                 'agent': agents[_currentPageIndex],
