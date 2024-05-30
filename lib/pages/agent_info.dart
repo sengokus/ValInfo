@@ -243,144 +243,138 @@ class AgentInfoState extends State<AgentInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          colors: [Color(0xff3e606c), Color(0xff4c7a8a), Color(0xff222042)],
-          stops: [0, 0.12, 1],
-          begin: Alignment(-0.4, -1.0),
-          end: Alignment(1.9, 2.3),
-        )),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: 24, // Assuming you have the agents list available
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPageIndex = index;
-                    List<dynamic> agents =
-                        []; // Add this line to define the 'agents' field
+        body: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+              colors: [Color(0xff3e606c), Color(0xff4c7a8a), Color(0xff222042)],
+              stops: [0, 0.12, 1],
+              begin: Alignment(-0.4, -1.0),
+              end: Alignment(1.9, 2.3),
+            )),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Expanded(
+                  child: PageView.builder(
+                      controller: _pageController,
+                      itemCount:
+                          24, // Assuming you have the agents list available
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPageIndex = index;
+                          List<dynamic> agents =
+                              []; // Add this line to define the 'agents' field
 
-                    fetchAgentData(agents[
-                        index]); // Update the code to use the 'agents' field
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        alignment: AlignmentDirectional.bottomEnd,
-                        children: [
-                          Positioned(
-                            top: 20,
-                            right: 20,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                          fetchAgentData(agents[
+                              index]); // Update the code to use the 'agents' field
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Stack(
+                              clipBehavior: Clip.none,
+                              alignment: AlignmentDirectional.bottomEnd,
                               children: [
-                                Text(
-                                  agentName ?? 'Loading...',
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .color,
-                                    fontFamily: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .fontFamily,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .fontSize,
+                                Positioned(
+                                  top: 20,
+                                  right: 20,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        agentName ?? 'Loading...',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium!
+                                              .color,
+                                          fontFamily: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium!
+                                              .fontFamily,
+                                          fontSize: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium!
+                                              .fontSize,
+                                        ),
+                                      ),
+                                      Text(
+                                        agentRoleName ?? 'Loading...',
+                                        style: TextStyle(
+                                          fontFamily: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .fontFamily,
+                                          fontSize: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .fontSize,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  agentRoleName ?? 'Loading...',
-                                  style: TextStyle(
-                                    fontFamily: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall!
-                                        .fontFamily,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall!
-                                        .fontSize,
-                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Image.network(agentPhotoUrl!,
+                                      fit: BoxFit.fitHeight, height: 610,
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    }
+                                    return const SizedBox(height: 500);
+                                  }),
                                 ),
                               ],
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Image.network(agentPhotoUrl!,
-                                fit: BoxFit.fitHeight, height: 610,
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              }
-                              return const SizedBox(height: 500);
-                            }),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Row(
-                          children: [
-                            AgentInfoButton(
-                              onPressed: () {
-                                setState(() {
-                                  isPressedFavorite = !isPressedFavorite;
-                                });
-                              },
-                              buttonText:
-                                  isPressedFavorite ? "FAVORITED" : "FAVORITE",
-                              backgroundColor: isPressedFavorite
-                                  ? Theme.of(context).indicatorColor
-                                  : Theme.of(context).hoverColor,
-                            ),
-                            const SizedBox(width: 5),
-                            AgentInfoButton(
-                              buttonText: "VIEW CONTRACT",
-                              backgroundColor: Theme.of(context).hoverColor,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AgentDetailsPage(
-                                      agentName: agentName!,
-                                      agentPhotoUrl: agentPhotoUrl!,
-                                      agentDescription: agentDescription!,
-                                      agentRole: agentRoleName ?? 'Loading',
-                                      agentRoleIcon: agentRoleIcon ?? 'Loading',
-                                      agentRoleDescription:
-                                          agentRoleDescription ?? 'Loading',
-                                    ),
-                                  ),
-                                );
-                              },
+                            AgentTab(
+                              color: Theme.of(context).indicatorColor,
+                              onAgentSelected: updateSelectedAgent,
                             ),
                           ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            AgentTab(
-              color: Theme.of(context).indicatorColor,
-              onAgentSelected: updateSelectedAgent,
-            ),
-          ],
-        ),
-      ),
-    );
+                        );
+                      }))
+            ])));
   }
 }
+
+// Padding(
+//                         padding: const EdgeInsets.all(20),
+//                         child: Row(
+//                           children: [
+//                             AgentInfoButton(
+//                               onPressed: () {
+//                                 setState(() {
+//                                   isPressedFavorite = !isPressedFavorite;
+//                                 });
+//                               },
+//                               buttonText:
+//                                   isPressedFavorite ? "FAVORITED" : "FAVORITE",
+//                               backgroundColor: isPressedFavorite
+//                                   ? Theme.of(context).indicatorColor
+//                                   : Theme.of(context).hoverColor,
+//                             ),
+//                             const SizedBox(width: 5),
+//                             AgentInfoButton(
+//                               buttonText: "VIEW CONTRACT",
+//                               backgroundColor: Theme.of(context).hoverColor,
+//                               onPressed: () {
+//                                 Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                     builder: (context) => AgentDetailsPage(
+//                                       agentName: agentName!,
+//                                       agentPhotoUrl: agentPhotoUrl!,
+//                                       agentDescription: agentDescription!,
+//                                       agentRole: agentRoleName ?? 'Loading',
+//                                       agentRoleIcon: agentRoleIcon ?? 'Loading',
+//                                       agentRoleDescription:
+//                                           agentRoleDescription ?? 'Loading',
+//                                     ),
+//                                   ),
+//                                 );
+//                               },
+//                             ),
+//                           ],
