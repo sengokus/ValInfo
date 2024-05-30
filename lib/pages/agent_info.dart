@@ -410,9 +410,11 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentRoleDescription;
 
   bool isPressedFavorite = false;
+
   late PageController _pageController;
   int _currentPageIndex = 0;
   List<dynamic> agents = []; // Store the agents list
+  List<bool> isFavorite = [];
 
   @override
   void initState() {
@@ -458,6 +460,20 @@ class AgentInfoState extends State<AgentInfo> {
     });
   }
 
+  void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
+    setState(() {
+      _currentPageIndex = selectedAgent['index'];
+      fetchAgentData(selectedAgent['agent']);
+      _pageController.jumpToPage(_currentPageIndex);
+    });
+  }
+
+  void addToFavorite(Map<String, dynamic> selectedAgent) {
+    setState(() {
+      isFavorite[selectedAgent['index']] = !isFavorite[selectedAgent['index']];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -485,7 +501,6 @@ class AgentInfoState extends State<AgentInfo> {
                         return Column(
                           children: [
                             Stack(
-                              clipBehavior: Clip.none,
                               alignment: AlignmentDirectional.bottomEnd,
                               children: [
                                 Positioned(
@@ -545,11 +560,42 @@ class AgentInfoState extends State<AgentInfo> {
                           ],
                         );
                       })),
-              AgentTab(
-                color: Theme.of(context).hoverColor,
-                onAgentSelected: updateSelectedAgent,
-                currentIndex: _currentPageIndex, // Pass the current index
-                agents: agents, // Pass the agents list
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: AgentInfoButton(
+                          onPressed: () {
+                            addToFavorite({
+                              'index': _currentPageIndex,
+                              'agent': agents[_currentPageIndex],
+                            });
+                          },
+                          buttonText: isFavorite[_currentPageIndex]
+                              ? 'FAVORITED'
+                              : 'FAVORITE',
+                          backgroundColor: isFavorite[_currentPageIndex]
+                              ? Theme.of(context).indicatorColor
+                              : Theme.of(context).hoverColor,
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: AgentInfoButton(buttonText: 'VIEW CONTRACT'),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: AgentTab(
+                  color: Theme.of(context).hoverColor,
+                  onAgentSelected: updateSelectedAgent,
+                  currentIndex: _currentPageIndex, // Pass the current index
+                  agents: agents, // Pass the agents list
+                ),
               ),
             ])));
   }
