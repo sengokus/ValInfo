@@ -50,21 +50,13 @@ class AgentInfoState extends State<AgentInfo> {
   final FocusNode _searchFocusNode = FocusNode();
   bool _showSuggestions = false;
   bool _isSearchOpen = false;
-  late Future<void> _dataFuture;
-
-  final TextEditingController _searchController = TextEditingController();
-  final FocusNode _searchFocusNode = FocusNode();
-  bool _showSuggestions = false;
-  bool _isSearchOpen = false;
 
   late PageController _pageController;
   int _currentPageIndex = 0;
   List<dynamic> agents = []; // Store the agents list
   List<dynamic> filteredAgents = [];
-  List<dynamic> filteredAgents = [];
   List<bool> isFavorite = []; // Store favorites in list
 
-  bool isPressedFavorite = false;
   bool isPressedFavorite = false;
 
   @override
@@ -230,66 +222,9 @@ class AgentInfoState extends State<AgentInfo> {
     setState(() => filteredAgents = suggestions);
   }
 
-  void searchAgent(String query) {
-    final suggestions = agents.where((agent) {
-      final agentList = agent['displayName'].toLowerCase();
-      final input = query.toLowerCase();
-
-      return agentList.contains(input);
-    }).toList();
-
-    setState(() => filteredAgents = suggestions);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
-            iconSize: 16,
-            onPressed: () {
-              setState(() {
-                _isSearchOpen = !_isSearchOpen;
-                if (!_isSearchOpen) {
-                  _searchController.clear();
-                  _showSuggestions = false;
-                }
-              });
-            },
-          ),
-          title: AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-            width: _isSearchOpen ? MediaQuery.of(context).size.width : 0,
-            child: _isSearchOpen
-                ? TextField(
-                    style: TextStyle(
-                      fontFamily:
-                          Theme.of(context).textTheme.titleSmall!.fontFamily,
-                      fontSize:
-                          Theme.of(context).textTheme.titleSmall!.fontSize,
-                    ),
-                    controller: _searchController,
-                    focusNode: _searchFocusNode,
-                    decoration: const InputDecoration(
-                      hintText: 'Search agents',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: -10, vertical: 0),
-                    ),
-                  )
-                : null,
-          ),
-        ),
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
