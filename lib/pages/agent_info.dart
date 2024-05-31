@@ -65,6 +65,7 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentRoleName;
   String? agentRoleIcon;
   String? agentRoleDescription;
+  String? agentBackground;
 
   String? agentAbility1Name;
   String? agentAbility1Icon;
@@ -110,11 +111,20 @@ class AgentInfoState extends State<AgentInfo> {
         _showSuggestions = _searchFocusNode.hasFocus;
       });
     });
+    _searchController.addListener(() {
+      searchAgent(_searchController.text);
+    });
+    _searchFocusNode.addListener(() {
+      setState(() {
+        _showSuggestions = _searchFocusNode.hasFocus;
+      });
+    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _searchController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -140,6 +150,7 @@ class AgentInfoState extends State<AgentInfo> {
           agent['role'] != null ? agent['role']['displayIcon'] : null;
       agentRoleDescription =
           agent['role'] != null ? agent['role']['description'] : null;
+      agentBackground = agent['background'];
 
       agentAbility1Name = agent['abilities'] != null
           ? agent['abilities'][0]['displayName']
@@ -253,6 +264,8 @@ class AgentInfoState extends State<AgentInfo> {
 
   @override
   Widget build(BuildContext context) {
+    log("First background: $agentBackground");
+
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -422,6 +435,56 @@ class AgentInfoState extends State<AgentInfo> {
                                               AlignmentDirectional.bottomEnd,
                                           children: [
                                             Positioned(
+                                              right: 7,
+                                              child: Image.network(
+                                                agentBackground != null
+                                                    ? agentBackground ??
+                                                        'Loading...'
+                                                    : 'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png',
+                                                fit: BoxFit.fitHeight,
+                                                height: 610,
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  }
+                                                  return const SizedBox(
+                                                    height: 500,
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Positioned(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                child: Hero(
+                                                  tag: 'agentPhoto',
+                                                  child: Image.network(
+                                                    agentPhotoUrl!,
+                                                    fit: BoxFit.fitHeight,
+                                                    height: 610,
+                                                    loadingBuilder: (BuildContext
+                                                            context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      }
+                                                      return const SizedBox(
+                                                        height: 500,
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
                                               top: 50,
                                               right: 20,
                                               child: Column(
@@ -519,23 +582,6 @@ class AgentInfoState extends State<AgentInfo> {
                                                 ],
                                               ),
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(8),
-                                              child: Image.network(
-                                                  agentPhotoUrl!,
-                                                  fit: BoxFit.fitHeight,
-                                                  height: 610, loadingBuilder:
-                                                      (BuildContext context,
-                                                          Widget child,
-                                                          ImageChunkEvent?
-                                                              loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                }
-                                                return const SizedBox(
-                                                    height: 500);
-                                              }),
-                                            ),
                                           ],
                                         );
                                       })),
@@ -590,49 +636,48 @@ class AgentInfoState extends State<AgentInfo> {
                                                   agentDescription:
                                                       agentDescription!,
                                                   agentRole: agentRoleName ??
-                                                      'Loading',
-                                                  agentRoleIcon:
-                                                      agentRoleIcon ??
-                                                          'Loading',
+                                                      'Initiator',
+                                                  agentRoleIcon: agentRoleIcon ??
+                                                      'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
                                                   agentRoleDescription:
                                                       agentRoleDescription ??
-                                                          'Loading',
+                                                          'Initiators challenge angles by setting up their team to enter contested ground and push defenders away.',
                                                   agentAbility1Name:
                                                       agentAbility1Name ??
-                                                          'Loading',
+                                                          'Wingman',
                                                   agentAbility1Description:
                                                       agentAbility1Description ??
-                                                          'Loading',
+                                                          'EQUIP Wingman. FIRE to send Wingman forward seeking enemies. Wingman unleashes a concussive blast toward the first enemy he sees. ALT FIRE when targeting a Spike site or planted Spike to have Wingman defuse or plant the Spike. To plant, Gekko must have the Spike in his inventory. When Wingman expires he reverts into a dormant globule. INTERACT to reclaim the globule and gain another Wingman charge after a short cooldown.',
                                                   agentAbility1Icon:
                                                       agentAbility1Icon ??
-                                                          'Loading',
+                                                          'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ability1/displayicon.png',
                                                   agentAbility2Name:
                                                       agentAbility2Name ??
-                                                          'Loading',
+                                                          'Dizzy',
                                                   agentAbility2Description:
                                                       agentAbility2Description ??
-                                                          'Loading',
+                                                          'EQUIP Dizzy. FIRE to send Dizzy soaring forward through the air. Dizzy charges then unleashes plasma blasts at enemies in line of sight. Enemies hit by her plasma are Blinded. When Dizzy expires she reverts into a dormant globule. INTERACT to reclaim the globule and gain another Dizzy charge after a short cooldown.',
                                                   agentAbility2Icon:
                                                       agentAbility2Icon ??
-                                                          'Loading',
+                                                          'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ability2/displayicon.png',
                                                   agentAbility3Name:
                                                       agentAbility3Name ??
-                                                          'Loading',
+                                                          'Mosh Pit',
                                                   agentAbility3Description:
                                                       agentAbility3Description ??
-                                                          'Loading',
+                                                          'EQUIP Mosh. FIRE to throw Mosh like a grenade. ALT FIRE to lob. Upon landing Mosh duplicates across a large area that deals a small amount of damage over time then after a short delay explodes.',
                                                   agentAbility3Icon:
                                                       agentAbility3Icon ??
-                                                          'Loading',
+                                                          'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/grenade/displayicon.png',
                                                   agentAbility4Name:
                                                       agentAbility4Name ??
-                                                          'Loading',
+                                                          'Thrash',
                                                   agentAbility4Description:
                                                       agentAbility4Description ??
-                                                          'Loading',
+                                                          'EQUIP Thrash. FIRE to link with Thrash’s mind and steer her through enemy territory. ACTIVATE to lunge forward and explode, Detaining any players in a small radius. When Thrash expires she reverts into a dormant globule. INTERACT to reclaim the globule and gain another Thrash charge after a short cooldown. Thrash can be reclaimed once.',
                                                   agentAbility4Icon:
                                                       agentAbility4Icon ??
-                                                          'Loading',
+                                                          'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ultimate/displayicon.png',
                                                 ),
                                               ),
                                             );

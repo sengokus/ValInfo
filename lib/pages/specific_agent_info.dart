@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:valinfo/components/agent_abilities_tabbar.dart';
+import 'package:valinfo/components/agent_info_box.dart';
 
-class AgentDetailsPage extends StatelessWidget {
+class AgentDetailsPage extends StatefulWidget {
   final String agentName;
   final String agentPhotoUrl;
   final String agentDescription;
@@ -47,13 +50,40 @@ class AgentDetailsPage extends StatelessWidget {
     required this.agentAbility4Description,
     required this.agentAbility4Icon,
     super.key,
-    //required this.agentAbilities,
   });
 
   @override
+  _AgentDetailsPageState createState() => _AgentDetailsPageState();
+}
+
+class _AgentDetailsPageState extends State<AgentDetailsPage> {
+  late String currentAgentRole;
+  late String currentAgentRoleDescription;
+  bool _animationCompleted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    currentAgentRole = widget.agentRole;
+    currentAgentRoleDescription = widget.agentRoleDescription;
+
+    Timer(const Duration(milliseconds: 350), () {
+      setState(() {
+        _animationCompleted = true;
+      });
+    });
+  }
+
+  void _updateAgentRole(String roleName, String roleDescription) {
+    setState(() {
+      currentAgentRole = roleName;
+      currentAgentRoleDescription = roleDescription;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    log("Role: $agentRole : $agentRoleIcon");
-    log("Role Description: $agentRoleDescription");
+    log("Role: ${widget.agentRole} : ${widget.agentRoleIcon}");
 
     return Scaffold(
       body: Container(
@@ -69,129 +99,110 @@ class AgentDetailsPage extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            Image.network(
-              agentPhotoUrl,
-              fit: BoxFit.fitHeight,
-              height: 700,
+            Hero(
+              tag: 'agentPhoto',
+              child: Image.network(
+                widget.agentPhotoUrl,
+                fit: BoxFit.fitHeight,
+                height: 800,
+              ),
             ),
             Positioned(
               bottom: 50,
               left: 0,
               right: 0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black54,
-                    border: Border(
-                      top: BorderSide(
-                        color: Colors.white,
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 8),
-                      Text(
-                        'Abilities:',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).textTheme.titleMedium!.color,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        agentDescription,
-                        style: TextStyle(
-                          fontSize: 15,
-                          height: 1.5,
-                          color: Theme.of(context).textTheme.titleMedium!.color,
-                        ),
-                        textAlign: TextAlign.justify,
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        agentRole != 'Loading'
-                            ? agentRole.toUpperCase()
-                            : 'INITIATOR',
-                        style: TextStyle(
-                          fontFamily: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .fontFamily,
-                          //fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        agentRoleDescription != 'Loading'
-                            ? agentRoleDescription
-                            : 'Initiators challenge angles by setting up their team to enter contested ground and push defenders away.',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          height: 1.5,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.justify,
-                      ),
-                    ],
+              child: AnimatedOpacity(
+                opacity: _animationCompleted ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 350),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  child: InfoCard(
+                    agentDescription: widget.agentDescription,
+                    agentRole: currentAgentRole,
+                    agentRoleDescription: currentAgentRoleDescription,
                   ),
                 ),
               ),
             ),
             Positioned(
-                top: 10,
-                right: 20,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      agentName,
-                      style: TextStyle(
-                        height: 1.0,
-                        color: Theme.of(context).textTheme.titleMedium!.color,
-                        fontFamily:
-                            Theme.of(context).textTheme.titleMedium!.fontFamily,
-                        fontSize:
-                            Theme.of(context).textTheme.titleMedium!.fontSize,
-                      ),
+              top: 50,
+              right: 20,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    widget.agentName,
+                    style: TextStyle(
+                      height: 1.0,
+                      color: Theme.of(context).textTheme.titleMedium!.color,
+                      fontFamily: Theme.of(context).textTheme.titleMedium!.fontFamily,
+                      fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: SizedBox(
-                              width: 12,
-                              height: 12,
-                              child: Image.network(
-                                agentRoleIcon != 'Loading'
-                                    ? agentRoleIcon
-                                    : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
-                                fit: BoxFit.cover,
-                              )),
-                        ),
-                        Text(
-                          agentRole != 'Loading' ? agentRole : 'Initiator',
-                          style: TextStyle(
-                            height: 0.2,
-                            fontFamily: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .fontFamily,
-                            fontSize: 16,
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: SizedBox(
+                          width: 12,
+                          height: 12,
+                          child: Image.network(
+                            widget.agentRoleIcon != 'Loading'
+                                ? widget.agentRoleIcon
+                                : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                        widget.agentRole != 'Loading' ? widget.agentRole : 'Initiator',
+                        style: TextStyle(
+                          height: 0.2,
+                          fontFamily:
+                              Theme.of(context).textTheme.titleSmall!.fontFamily,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 50,
+              left: 20,
+              child: AnimatedOpacity(
+                opacity: _animationCompleted ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 500),
+                child: AgentAbilities(
+                  abilities: [
+                    {
+                      'name': widget.agentAbility1Name,
+                      'description': widget.agentAbility1Description,
+                      'icon': widget.agentAbility1Icon,
+                    },
+                    {
+                      'name': widget.agentAbility2Name,
+                      'description': widget.agentAbility2Description,
+                      'icon': widget.agentAbility2Icon,
+                    },
+                    {
+                      'name': widget.agentAbility3Name,
+                      'description': widget.agentAbility3Description,
+                      'icon': widget.agentAbility3Icon,
+                    },
+                    {
+                      'name': widget.agentAbility4Name,
+                      'description': widget.agentAbility4Description,
+                      'icon': widget.agentAbility4Icon,
+                    },
                   ],
-                )),
-          ],
+                  onAbilityClicked: _updateAgentRole,
+                ),
+            ),
+        )
+        ],
         ),
       ),
     );
