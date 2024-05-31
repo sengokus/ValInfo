@@ -23,30 +23,43 @@ class AgentRolePage extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              role,
-              style: Theme.of(context).textTheme.titleMedium,
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff3e606c), Color(0xff4c7a8a), Color(0xff222042)],
+            stops: [0, 0.12, 1],
+            begin: Alignment(-0.4, -1.0),
+            end: Alignment(1.9, 2.3),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 50.0),
+            Text(
+              role.toUpperCase(),
+              style: TextStyle(
+                fontFamily: Theme.of(context).textTheme.titleMedium!.fontFamily,
+                fontSize: 30,
+              ),
               textAlign: TextAlign.center,
             ),
-          ),
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(8.0),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1.0,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-              ),
-              itemCount: agents.length,
-              itemBuilder: (context, index) {
-                var agent = agents[index];
-                String agentFace = agent['displayIcon'];
-                String agentPhotoUrl = agent['fullPortrait'];
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.all(8.0),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.0,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                ),
+                itemCount: agents.length,
+                itemBuilder: (context, index) {
+                  var agent = agents[index];
+                  String agentFace = agent['displayIcon'];
+                  String agentPhotoUrl = agent['fullPortrait'];
 
                   // Extracting agent data
                   final agentName = agent['displayName'] ?? '';
@@ -107,7 +120,8 @@ class AgentRolePage extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Card(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: Image.network(agentFace, fit: BoxFit.cover),
                     ),
                   );
@@ -117,5 +131,6 @@ class AgentRolePage extends StatelessWidget {
           ],
         ),
       ),
+    );
   }
 }
