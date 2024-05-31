@@ -128,6 +128,7 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
               top: 50,
               right: 20,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     widget.agentName,
