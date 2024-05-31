@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // For storing favorites to local storage
 import 'package:valinfo/components/agent_info_button.dart';
 import 'package:valinfo/components/agent_tabbar.dart';
+import 'package:valinfo/pages/agents_display.dart';
 import 'agents_role.dart';
 import 'specific_agent_info.dart';
 
@@ -218,6 +220,8 @@ class AgentInfoState extends State<AgentInfo> {
     });
   }
 
+ 
+
   // Update screen based on selected agent
   void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
     setState(() {
@@ -267,10 +271,10 @@ class AgentInfoState extends State<AgentInfo> {
    
    return Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leadingWidth: 200,  // Adjust this to fit your layout
+        leadingWidth: 200, // Adjust this to fit your layout
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0), // Add padding to the left
           child: Row(
@@ -288,7 +292,6 @@ class AgentInfoState extends State<AgentInfo> {
                     _isSearchOpen = !_isSearchOpen;
                     if (!_isSearchOpen) {
                       _searchController.clear();
-                      _showSuggestions = false;
                     }
                   });
                 },
@@ -297,32 +300,41 @@ class AgentInfoState extends State<AgentInfo> {
           ),
         ),
         title: AnimatedContainer(
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeInOut,
-          width: _isSearchOpen ? MediaQuery.of(context).size.width - 200 : 0,  // Adjust this to fit your layout
-          child: _isSearchOpen
-              ? TextField(
-                  style: TextStyle(
-                    fontFamily: Theme.of(context).textTheme.titleSmall!.fontFamily,
-                    fontSize: Theme.of(context).textTheme.titleSmall!.fontSize,
-                  ),
-                  controller: _searchController,
-                  focusNode: FocusNode(),
-                  decoration: const InputDecoration(
-                    hintText: 'Search agents',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    contentPadding: EdgeInsets.symmetric(horizontal: -10, vertical: 0),
-                  ),
-                )
-              : null,
-        ),
+  duration: const Duration(milliseconds: 400),
+  curve: Curves.easeInOut,
+  width: _isSearchOpen
+      ? MediaQuery.of(context).size.width - 200
+      : 0, // Adjust this to fit your layout
+  child: _isSearchOpen
+      ? TextField(
+          style: TextStyle(
+            fontFamily: Theme.of(context).textTheme.titleSmall!.fontFamily,
+            fontSize: Theme.of(context).textTheme.titleSmall!.fontSize,
+          ),
+          controller: _searchController,
+          onEditingComplete: () {
+            // Navigate to new page when editing is complete (done button pressed)
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchResultsPage(searchQuery: _searchController.text),
+              ),
+            );
+          },
+          decoration: const InputDecoration(
+            hintText: 'Search agents',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: Colors.transparent,
+            contentPadding: EdgeInsets.symmetric(horizontal: -10, vertical: 0),
+          ),
+        )
+      : null,
+),
       ),
-
       
 
         body: FutureBuilder<void>(
@@ -570,11 +582,16 @@ class AgentInfoState extends State<AgentInfo> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                        
+
+
+                 
+                          
                                     Expanded(
                                       child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 5.0),
+
+
                                           child: AgentInfoButton(
                                             onPressed: () {
                                               isFavorite[_currentPageIndex]
