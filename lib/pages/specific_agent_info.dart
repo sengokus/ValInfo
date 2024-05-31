@@ -112,13 +112,14 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                 ),
               ),
               Positioned(
-                top: 10,
+                top: 50,
                 right: 20,
                 child: Column(
                   children: [
                     Text(
                       widget.agentName,
                       style: TextStyle(
+                        height: 1.0,
                         color: Theme.of(context).textTheme.titleMedium!.color,
                         fontFamily:
                             Theme.of(context).textTheme.titleMedium!.fontFamily,
@@ -131,8 +132,8 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: SizedBox(
-                              width: 20,
-                              height: 20,
+                              width: 12,
+                              height: 12,
                               child: Image.network(
                                 widget.agentRoleIcon != 'Loading'
                                     ? widget.agentRoleIcon
@@ -141,8 +142,8 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                               )),
                         ),
                         Text(
-                          currentAgentRole != 'Loading'
-                              ? currentAgentRole
+                          widget.agentRole != 'Loading'
+                              ? widget.agentRole
                               : 'Initiator',
                           style: TextStyle(
                             height: 0.2,
@@ -160,7 +161,7 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                 ),
               ),
               Positioned(
-                top: 20,
+                top: 50,
                 left: 20,
                 child: AgentAbilities(
                   abilities: [
