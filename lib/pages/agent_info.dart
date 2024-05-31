@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // For storing favorites to local storage
 import 'package:valinfo/components/agent_info_button.dart';
 import 'package:valinfo/components/agent_tabbar.dart';
+import 'package:valinfo/pages/agents_display.dart';
 import 'agents_role.dart';
 import 'specific_agent_info.dart';
 
@@ -21,18 +23,26 @@ class AgentInfo extends StatefulWidget {
 }
 
 class FilterButton extends StatelessWidget {
-  const FilterButton({super.key});
+  final VoidCallback onPressed;
+
+  const FilterButton({required this.onPressed, super.key});
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      offset: const Offset(0, 20),
-      child: const Icon(Icons.arrow_drop_down),
+      offset: Offset(0, 40),  // Adjusts the position of the popup menu
+      child: Row(
+        children: [
+          Text('Filter by'),
+          SizedBox(width: 5),
+          Icon(Icons.arrow_drop_down),
+        ],
+      ),
       onSelected: (String role) async {
         try {
           // Fetch agents with the selected role
           List<dynamic> agents = await fetchAgentsRole(role: role);
-          log('Agents with role $role: ${agents.map((agent) => agent['displayName']).toList()}');
+          print('Agents with role $role: ${agents.map((agent) => agent['displayName']).toList()}');
 
           // Push new page containing icons for agents
           Navigator.push(
@@ -42,20 +52,22 @@ class FilterButton extends StatelessWidget {
             ),
           );
         } catch (e) {
-          throw ('Error: $e');
+          print('Error: $e');
         }
       },
       itemBuilder: (BuildContext context) {
         return [
-          const PopupMenuItem(value: 'Duelist', child: Text('Duelist')),
-          const PopupMenuItem(value: 'Initiator', child: Text('Initiator')),
-          const PopupMenuItem(value: 'Controller', child: Text('Controller')),
-          const PopupMenuItem(value: 'Sentinel', child: Text('Sentinel')),
+          PopupMenuItem(value: 'Duelist', child: Text('Duelist')),
+          PopupMenuItem(value: 'Initiator', child: Text('Initiator')),
+          PopupMenuItem(value: 'Controller', child: Text('Controller')),
+          PopupMenuItem(value: 'Sentinel', child: Text('Sentinel')),
         ];
       },
     );
   }
 }
+
+
 
 class AgentInfoState extends State<AgentInfo> {
   String? agentName;
@@ -65,7 +77,6 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentRoleName;
   String? agentRoleIcon;
   String? agentRoleDescription;
-  String? agentBackground;
 
   String? agentAbility1Name;
   String? agentAbility1Icon;
@@ -111,20 +122,11 @@ class AgentInfoState extends State<AgentInfo> {
         _showSuggestions = _searchFocusNode.hasFocus;
       });
     });
-    _searchController.addListener(() {
-      searchAgent(_searchController.text);
-    });
-    _searchFocusNode.addListener(() {
-      setState(() {
-        _showSuggestions = _searchFocusNode.hasFocus;
-      });
-    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    _searchController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -150,7 +152,6 @@ class AgentInfoState extends State<AgentInfo> {
           agent['role'] != null ? agent['role']['displayIcon'] : null;
       agentRoleDescription =
           agent['role'] != null ? agent['role']['description'] : null;
-      agentBackground = agent['background'];
 
       agentAbility1Name = agent['abilities'] != null
           ? agent['abilities'][0]['displayName']
@@ -219,6 +220,8 @@ class AgentInfoState extends State<AgentInfo> {
     });
   }
 
+ 
+
   // Update screen based on selected agent
   void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
     setState(() {
@@ -262,66 +265,80 @@ class AgentInfoState extends State<AgentInfo> {
     setState(() => filteredAgents = suggestions);
   }
 
+
   @override
   Widget build(BuildContext context) {
-    log("First background: $agentBackground");
-
-    return Scaffold(
+   
+   return Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leadingWidth: 75,
-          leading: Padding(
-            padding:
-                const EdgeInsets.only(left: 8.0), // Add padding to the left
-            child: Row(
-              children: [
-                const FilterButton(),
-                IconButton(
-                  icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
-                  iconSize: 16,
-                  onPressed: () {
-                    setState(() {
-                      _isSearchOpen = !_isSearchOpen;
-                      if (!_isSearchOpen) {
-                        _searchController.clear();
-                        _showSuggestions = false;
-                      }
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-          title: AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-            width: _isSearchOpen
-                ? MediaQuery.of(context).size.width - 200
-                : 0, // Adjust this to fit your layout
-            child: _isSearchOpen
-                ? TextField(
-                    style: TextStyle(
-                      fontFamily:
-                          Theme.of(context).textTheme.titleSmall!.fontFamily,
-                      fontSize:
-                          Theme.of(context).textTheme.titleSmall!.fontSize,
-                    ),
-                    controller: _searchController,
-                    focusNode: FocusNode(),
-                    decoration: const InputDecoration(
-                        hintText: 'Search agents',
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 0, vertical: 0)),
-                  )
-                : null,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leadingWidth: 200, // Adjust this to fit your layout
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0), // Add padding to the left
+          child: Row(
+            children: [
+              FilterButton(
+                onPressed: () {
+                  print('Filter button pressed');
+                },
+              ),
+              IconButton(
+                icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
+                iconSize: 16,
+                onPressed: () {
+                  setState(() {
+                    _isSearchOpen = !_isSearchOpen;
+                    if (!_isSearchOpen) {
+                      _searchController.clear();
+                    }
+                  });
+                },
+              ),
+            ],
           ),
         ),
+        title: AnimatedContainer(
+  duration: const Duration(milliseconds: 400),
+  curve: Curves.easeInOut,
+  width: _isSearchOpen
+      ? MediaQuery.of(context).size.width - 200
+      : 0, // Adjust this to fit your layout
+  child: _isSearchOpen
+      ? TextField(
+          style: TextStyle(
+            fontFamily: Theme.of(context).textTheme.titleSmall!.fontFamily,
+            fontSize: Theme.of(context).textTheme.titleSmall!.fontSize,
+          ),
+          controller: _searchController,
+          onEditingComplete: () {
+            // Navigate to new page when editing is complete (done button pressed)
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchResultsPage(searchQuery: _searchController.text),
+              ),
+            );
+          },
+          decoration: const InputDecoration(
+            hintText: 'Search agents',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: Colors.transparent,
+            contentPadding: EdgeInsets.symmetric(horizontal: -10, vertical: 0),
+          ),
+        )
+      : null,
+),
+      ),
+      
+
         body: FutureBuilder<void>(
+            
             future: _dataFuture, // Initialize data before construction
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -349,72 +366,80 @@ class AgentInfoState extends State<AgentInfo> {
                           end: Alignment(1.9, 2.3),
                         ),
                       ),
-                      child: Stack(children: [
+                      child: Stack(
+                        
+                        children: [
                         if (_showSuggestions &&
                             _searchController.text.isNotEmpty)
+                          
                           Positioned(
                             top: 56,
                             left: 0,
                             right: 0,
                             child: Container(
-                              color: Colors.blue,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: filteredAgents.length,
-                                itemBuilder: (context, index) {
-                                  final item = filteredAgents[index];
+                            color: Colors.blue,
 
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              AgentDetailsPage(
-                                            agentName: item['displayName'],
-                                            agentPhotoUrl: item['displayIcon'],
-                                            agentDescription: '',
-                                            agentRole: '',
-                                            agentRoleIcon: '',
-                                            agentRoleDescription: '',
-                                            agentAbility1Name: '',
-                                            agentAbility1Description: '',
-                                            agentAbility1Icon: '',
-                                            agentAbility2Name: '',
-                                            agentAbility2Description: '',
-                                            agentAbility2Icon: '',
-                                            agentAbility3Name: '',
-                                            agentAbility3Description: '',
-                                            agentAbility3Icon: '',
-                                            agentAbility4Name: '',
-                                            agentAbility4Description: '',
-                                            agentAbility4Icon: '',
+
+                            child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount: filteredAgents.length,
+                                                          itemBuilder: (context, index) {
+                                                            final item = filteredAgents[index];
+                                                            
+                                                            
+                                                          return GestureDetector(
+                                                          onTap: () {
+                                                            print('Hi');
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) => AgentDetailsPage(
+                                                                  agentName: item['displayName'],
+                                                                  agentPhotoUrl: item['displayIcon'],
+                                                                  agentDescription: '', // You might want to fetch this data separately
+                                                                  agentRole: '', // You might want to fetch this data separately
+                                                                  agentRoleIcon: '', // You might want to fetch this data separately
+                                                                  agentRoleDescription: '', // You might want to fetch this data separately
+                                                                  agentAbility1Name: '', // You might want to fetch this data separately
+                                                                  agentAbility1Description: '', // You might want to fetch this data separately
+                                                                  agentAbility1Icon: '', // You might want to fetch this data separately
+                                                                  agentAbility2Name: '', // You might want to fetch this data separately
+                                                                  agentAbility2Description: '', // You might want to fetch this data separately
+                                                                  agentAbility2Icon: '', // You might want to fetch this data separately
+                                                                  agentAbility3Name: '', // You might want to fetch this data separately
+                                                                  agentAbility3Description: '', // You might want to fetch this data separately
+                                                                  agentAbility3Icon: '', // You might want to fetch this data separately
+                                                                  agentAbility4Name: '', // You might want to fetch this data separately
+                                                                  agentAbility4Description: '', // You might want to fetch this data separately
+                                                                  agentAbility4Icon: '', // You might want to fetch this data separately
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: ListTile(
+                                                            leading: Image.network(
+                                                              item['displayIcon'],
+                                                              fit: BoxFit.cover,
+                                                              width: 50,
+                                                              height: 50,
+                                                            ),
+                                                            title: Text(item['displayName']),
+                                                            onTap: () {
+                                                              _searchController.text = item['displayName'];
+                                                              setState(() {
+                                                                _showSuggestions = false;
+                                                              });
+                                                              fetchAgentData(item);
+                                                            },
+                                                          ),
+                                                        );
+                              },
+                            ),
                                           ),
                                         ),
-                                      );
-                                    },
-                                    child: ListTile(
-                                      leading: Image.network(
-                                        item['displayIcon'],
-                                        fit: BoxFit.cover,
-                                        width: 50,
-                                        height: 50,
-                                      ),
-                                      title: Text(item['displayName']),
-                                      onTap: () {
-                                        _searchController.text =
-                                            item['displayName'];
-                                        setState(() {
-                                          _showSuggestions = false;
-                                        });
-                                        fetchAgentData(item);
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
+
+
+                    
                         Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -434,56 +459,6 @@ class AgentInfoState extends State<AgentInfo> {
                                           alignment:
                                               AlignmentDirectional.bottomEnd,
                                           children: [
-                                            Positioned(
-                                              right: 7,
-                                              child: Image.network(
-                                                agentBackground != null
-                                                    ? agentBackground ??
-                                                        'Loading...'
-                                                    : 'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png',
-                                                fit: BoxFit.fitHeight,
-                                                height: 610,
-                                                loadingBuilder:
-                                                    (BuildContext context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
-                                                  if (loadingProgress == null) {
-                                                    return child;
-                                                  }
-                                                  return const SizedBox(
-                                                    height: 500,
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                            Positioned(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                child: Hero(
-                                                  tag: 'agentPhoto',
-                                                  child: Image.network(
-                                                    agentPhotoUrl!,
-                                                    fit: BoxFit.fitHeight,
-                                                    height: 610,
-                                                    loadingBuilder: (BuildContext
-                                                            context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
-                                                      if (loadingProgress ==
-                                                          null) {
-                                                        return child;
-                                                      }
-                                                      return const SizedBox(
-                                                        height: 500,
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
                                             Positioned(
                                               top: 50,
                                               right: 20,
@@ -582,6 +557,23 @@ class AgentInfoState extends State<AgentInfo> {
                                                 ],
                                               ),
                                             ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8),
+                                              child: Image.network(
+                                                  agentPhotoUrl!,
+                                                  fit: BoxFit.fitHeight,
+                                                  height: 610, loadingBuilder:
+                                                      (BuildContext context,
+                                                          Widget child,
+                                                          ImageChunkEvent?
+                                                              loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                }
+                                                return const SizedBox(
+                                                    height: 500);
+                                              }),
+                                            ),
                                           ],
                                         );
                                       })),
@@ -590,10 +582,16 @@ class AgentInfoState extends State<AgentInfo> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+
+
+                 
+                          
                                     Expanded(
                                       child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 5.0),
+
+
                                           child: AgentInfoButton(
                                             onPressed: () {
                                               isFavorite[_currentPageIndex]
@@ -636,48 +634,49 @@ class AgentInfoState extends State<AgentInfo> {
                                                   agentDescription:
                                                       agentDescription!,
                                                   agentRole: agentRoleName ??
-                                                      'Initiator',
-                                                  agentRoleIcon: agentRoleIcon ??
-                                                      'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
+                                                      'Loading',
+                                                  agentRoleIcon:
+                                                      agentRoleIcon ??
+                                                          'Loading',
                                                   agentRoleDescription:
                                                       agentRoleDescription ??
-                                                          'Initiators challenge angles by setting up their team to enter contested ground and push defenders away.',
+                                                          'Loading',
                                                   agentAbility1Name:
                                                       agentAbility1Name ??
-                                                          'Wingman',
+                                                          'Loading',
                                                   agentAbility1Description:
                                                       agentAbility1Description ??
-                                                          'EQUIP Wingman. FIRE to send Wingman forward seeking enemies. Wingman unleashes a concussive blast toward the first enemy he sees. ALT FIRE when targeting a Spike site or planted Spike to have Wingman defuse or plant the Spike. To plant, Gekko must have the Spike in his inventory. When Wingman expires he reverts into a dormant globule. INTERACT to reclaim the globule and gain another Wingman charge after a short cooldown.',
+                                                          'Loading',
                                                   agentAbility1Icon:
                                                       agentAbility1Icon ??
-                                                          'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ability1/displayicon.png',
+                                                          'Loading',
                                                   agentAbility2Name:
                                                       agentAbility2Name ??
-                                                          'Dizzy',
+                                                          'Loading',
                                                   agentAbility2Description:
                                                       agentAbility2Description ??
-                                                          'EQUIP Dizzy. FIRE to send Dizzy soaring forward through the air. Dizzy charges then unleashes plasma blasts at enemies in line of sight. Enemies hit by her plasma are Blinded. When Dizzy expires she reverts into a dormant globule. INTERACT to reclaim the globule and gain another Dizzy charge after a short cooldown.',
+                                                          'Loading',
                                                   agentAbility2Icon:
                                                       agentAbility2Icon ??
-                                                          'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ability2/displayicon.png',
+                                                          'Loading',
                                                   agentAbility3Name:
                                                       agentAbility3Name ??
-                                                          'Mosh Pit',
+                                                          'Loading',
                                                   agentAbility3Description:
                                                       agentAbility3Description ??
-                                                          'EQUIP Mosh. FIRE to throw Mosh like a grenade. ALT FIRE to lob. Upon landing Mosh duplicates across a large area that deals a small amount of damage over time then after a short delay explodes.',
+                                                          'Loading',
                                                   agentAbility3Icon:
                                                       agentAbility3Icon ??
-                                                          'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/grenade/displayicon.png',
+                                                          'Loading',
                                                   agentAbility4Name:
                                                       agentAbility4Name ??
-                                                          'Thrash',
+                                                          'Loading',
                                                   agentAbility4Description:
                                                       agentAbility4Description ??
-                                                          'EQUIP Thrash. FIRE to link with Thrash’s mind and steer her through enemy territory. ACTIVATE to lunge forward and explode, Detaining any players in a small radius. When Thrash expires she reverts into a dormant globule. INTERACT to reclaim the globule and gain another Thrash charge after a short cooldown. Thrash can be reclaimed once.',
+                                                          'Loading',
                                                   agentAbility4Icon:
                                                       agentAbility4Icon ??
-                                                          'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ultimate/displayicon.png',
+                                                          'Loading',
                                                 ),
                                               ),
                                             );
