@@ -37,7 +37,7 @@ class AgentRolePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 50.0),
+            const SizedBox(height: 60.0),
             Text(
               role.toUpperCase(),
               style: TextStyle(
@@ -123,6 +123,13 @@ class AgentRolePage extends StatelessWidget {
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: Image.network(agentFace, fit: BoxFit.cover),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).indicatorColor,
+                        border: Border.all(
+                          color: Colors.white30,
+                          width: 1,
+                        ),
+                      )
                     ),
                   );
                 },

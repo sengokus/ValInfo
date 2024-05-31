@@ -26,7 +26,7 @@ class FilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      offset: const Offset(0, 20),
+      offset: const Offset(0, 40),
       child: const Icon(Icons.arrow_drop_down),
       onSelected: (String role) async {
         try {
@@ -85,11 +85,6 @@ class AgentInfoState extends State<AgentInfo> {
 
   late Future<void> _dataFuture;
 
-  final TextEditingController _searchController = TextEditingController();
-  final FocusNode _searchFocusNode = FocusNode();
-  bool _showSuggestions = false;
-  bool _isSearchOpen = false;
-
   late PageController _pageController;
   int _currentPageIndex = 0;
   List<dynamic> agents = []; // Store the agents list
@@ -103,29 +98,11 @@ class AgentInfoState extends State<AgentInfo> {
     super.initState();
     _pageController = PageController();
     _dataFuture = initData();
-    _searchController.addListener(() {
-      searchAgent(_searchController.text);
-    });
-    _searchFocusNode.addListener(() {
-      setState(() {
-        _showSuggestions = _searchFocusNode.hasFocus;
-      });
-    });
-    _searchController.addListener(() {
-      searchAgent(_searchController.text);
-    });
-    _searchFocusNode.addListener(() {
-      setState(() {
-        _showSuggestions = _searchFocusNode.hasFocus;
-      });
-    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    _searchController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -272,53 +249,10 @@ class AgentInfoState extends State<AgentInfo> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leadingWidth: 75,
-          leading: Padding(
+          leading: const Padding(
             padding:
-                const EdgeInsets.only(left: 8.0), // Add padding to the left
-            child: Row(
-              children: [
-                const FilterButton(),
-                IconButton(
-                  icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
-                  iconSize: 16,
-                  onPressed: () {
-                    setState(() {
-                      _isSearchOpen = !_isSearchOpen;
-                      if (!_isSearchOpen) {
-                        _searchController.clear();
-                        _showSuggestions = false;
-                      }
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-          title: AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-            width: _isSearchOpen
-                ? MediaQuery.of(context).size.width - 200
-                : 0, // Adjust this to fit your layout
-            child: _isSearchOpen
-                ? TextField(
-                    style: TextStyle(
-                      fontFamily:
-                          Theme.of(context).textTheme.titleSmall!.fontFamily,
-                      fontSize:
-                          Theme.of(context).textTheme.titleSmall!.fontSize,
-                    ),
-                    controller: _searchController,
-                    focusNode: FocusNode(),
-                    decoration: const InputDecoration(
-                        hintText: 'Search agents',
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 0, vertical: 0)),
-                  )
-                : null,
+                EdgeInsets.only(left: 8.0), // Add padding to the left
+            child: FilterButton(),
           ),
         ),
         body: FutureBuilder<void>(
@@ -350,15 +284,11 @@ class AgentInfoState extends State<AgentInfo> {
                         ),
                       ),
                       child: Stack(children: [
-                        if (_showSuggestions &&
-                            _searchController.text.isNotEmpty)
                           Positioned(
                             top: 56,
                             left: 0,
                             right: 0,
-                            child: Container(
-                              color: Colors.blue,
-                              child: ListView.builder(
+                            child: ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: filteredAgents.length,
                                 itemBuilder: (context, index) {
@@ -401,20 +331,11 @@ class AgentInfoState extends State<AgentInfo> {
                                         height: 50,
                                       ),
                                       title: Text(item['displayName']),
-                                      onTap: () {
-                                        _searchController.text =
-                                            item['displayName'];
-                                        setState(() {
-                                          _showSuggestions = false;
-                                        });
-                                        fetchAgentData(item);
-                                      },
                                     ),
                                   );
                                 },
                               ),
                             ),
-                          ),
                         Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
