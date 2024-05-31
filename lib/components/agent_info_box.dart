@@ -10,7 +10,7 @@ class InfoCard extends StatelessWidget {
     required this.agentRole,
     required this.agentRoleDescription,
     super.key,
-  }) ;
+  });
 
   @override
   Widget build(BuildContext context) {
