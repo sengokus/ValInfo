@@ -19,7 +19,7 @@ class AgentRolePage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               role,
-              style: Theme.of(context).textTheme.titleMedium,  // Apply the custom text style
+              style: Theme.of(context).textTheme.titleMedium,
               textAlign: TextAlign.center,
             ),
           ),
@@ -27,7 +27,7 @@ class AgentRolePage extends StatelessWidget {
             child: GridView.builder(
               padding: const EdgeInsets.all(8.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Adjust as needed
+                crossAxisCount: 2,
                 childAspectRatio: 1.0,
                 crossAxisSpacing: 8.0,
                 mainAxisSpacing: 8.0,
@@ -37,31 +37,67 @@ class AgentRolePage extends StatelessWidget {
                 var agent = agents[index];
                 String agentPhotoUrl = agent['displayIcon'];
 
+                // Extracting agent data
+                final agentName = agent['displayName'] ?? '';
+                final agentDescription = agent['description'] ?? '';
+                final agentRoleIcon = agent['role']['displayIcon'] ?? '';
+                final agentRoleName = agent['role']['displayName'] ?? '';
+                final agentAbility1Name = agent['abilities'][0]['displayName'] ?? '';
+                final agentAbility1Icon = agent['abilities'][0]['displayIcon'] ?? '';
+                final agentAbility1Description = agent['abilities'][0]['description'] ?? '';
+                final agentAbility2Name = agent['abilities'][1]['displayName'] ?? '';
+                final agentAbility2Icon = agent['abilities'][1]['displayIcon'] ?? '';
+                final agentAbility2Description = agent['abilities'][1]['description'] ?? '';
+                final agentAbility3Name = agent['abilities'][2]['displayName'] ?? '';
+                final agentAbility3Icon = agent['abilities'][2]['displayIcon'] ?? '';
+                final agentAbility3Description = agent['abilities'][2]['description'] ?? '';
+                final agentAbility4Name = agent['abilities'][3]['displayName'] ?? '';
+                final agentAbility4Icon = agent['abilities'][3]['displayIcon'] ?? '';
+                final agentAbility4Description = agent['abilities'][3]['description'] ?? '';
+
                 return GestureDetector(
                   onTap: () {
+                    print('Tapped:');
+                    print('Agent Name: $agentName');
+                    print('Agent Photo URL: $agentPhotoUrl');
+                    print('Agent Description: $agentDescription');
+                    print('Agent Role: $agentRoleName');
+                    print('Agent Role Icon: $agentRoleIcon');
+                    print('Agent Ability 1 Name: $agentAbility1Name');
+                    print('Agent Ability 1 Icon: $agentAbility1Icon');
+                    print('Agent Ability 1 Description: $agentAbility1Description');
+                    print('Agent Ability 2 Name: $agentAbility2Name');
+                    print('Agent Ability 2 Icon: $agentAbility2Icon');
+                    print('Agent Ability 2 Description: $agentAbility2Description');
+                    print('Agent Ability 3 Name: $agentAbility3Name');
+                    print('Agent Ability 3 Icon: $agentAbility3Icon');
+                    print('Agent Ability 3 Description: $agentAbility3Description');
+                    print('Agent Ability 4 Name: $agentAbility4Name');
+                    print('Agent Ability 4 Icon: $agentAbility4Icon');
+                    print('Agent Ability 4 Description: $agentAbility4Description');
+
                     // Navigate to AgentDetailsPage when the card is tapped
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AgentDetailsPage(
-                          agentName: agent['displayName'],
+                          agentName: agentName,
                           agentPhotoUrl: agentPhotoUrl,
-                          agentDescription: agent['description'],
-                          agentRole: role,
-                          agentRoleIcon: 'Role Icon URL',
-                          agentRoleDescription: 'Role Description',
-                          agentAbility1Name: 'Ability 1 Name',
-                          agentAbility1Description: 'Ability 1 Description',
-                          agentAbility1Icon: 'Ability 1 Icon URL',
-                          agentAbility2Name: 'Ability 2 Name',
-                          agentAbility2Description: 'Ability 2 Description',
-                          agentAbility2Icon: 'Ability 2 Icon URL',
-                          agentAbility3Name: 'Ability 3 Name',
-                          agentAbility3Description: 'Ability 3 Description',
-                          agentAbility3Icon: 'Ability 3 Icon URL',
-                          agentAbility4Name: 'Ability 4 Name',
-                          agentAbility4Description: 'Ability 4 Description',
-                          agentAbility4Icon: 'Ability 4 Icon URL',
+                          agentDescription: agentDescription,
+                          agentRole: agentRoleName,
+                          agentRoleIcon: agentRoleIcon,
+                          agentAbility1Name: agentAbility1Name,
+                          agentAbility1Icon: agentAbility1Icon,
+                          agentAbility1Description: agentAbility1Description,
+                          agentAbility2Name: agentAbility2Name,
+                          agentAbility2Icon: agentAbility2Icon,
+                          agentAbility2Description: agentAbility2Description,
+                          agentAbility3Name: agentAbility3Name,
+                          agentAbility3Icon: agentAbility3Icon,
+                          agentAbility3Description: agentAbility3Description,
+                          agentAbility4Name: agentAbility4Name,
+                          agentAbility4Icon: agentAbility4Icon,
+                          agentAbility4Description: agentAbility4Description, agentRoleDescription: '',
                         ),
                       ),
                     );
@@ -78,4 +114,3 @@ class AgentRolePage extends StatelessWidget {
     );
   }
 }
-
