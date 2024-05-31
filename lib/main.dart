@@ -7,7 +7,6 @@ import 'package:valinfo/pages/agent_info.dart';
 import 'package:valinfo/pages/onboarding.dart';
 import 'package:valinfo/utils/riotapi.dart';
 
-import 'package:valinfo/pages/agentt.dart';
 void main() {
   fetchValApiData().then((agentData) {
     runApp(MainApp(agentData: agentData));
