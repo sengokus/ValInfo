@@ -72,11 +72,20 @@ class AgentInfoState extends State<AgentInfo> {
         _showSuggestions = _searchFocusNode.hasFocus;
       });
     });
+    _searchController.addListener(() {
+      searchAgent(_searchController.text);
+    });
+    _searchFocusNode.addListener(() {
+      setState(() {
+        _showSuggestions = _searchFocusNode.hasFocus;
+      });
+    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _searchController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -519,9 +528,8 @@ class AgentInfoState extends State<AgentInfo> {
                                                       agentDescription!,
                                                   agentRole: agentRoleName ??
                                                       'Initiator',
-                                                  agentRoleIcon:
-                                                      agentRoleIcon ??
-                                                          'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
+                                                  agentRoleIcon: agentRoleIcon ??
+                                                      'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
                                                   agentRoleDescription:
                                                       agentRoleDescription ??
                                                           'Initiators challenge angles by setting up their team to enter contested ground and push defenders away.',
