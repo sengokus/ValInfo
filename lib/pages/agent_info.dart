@@ -20,38 +20,39 @@ class AgentInfo extends StatefulWidget {
   AgentInfoState createState() => AgentInfoState();
 }
 
-
 class FilterButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const FilterButton({required this.onPressed, super.key, required IconData icon, required Color iconColor});
+  const FilterButton({required this.onPressed, super.key});
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      icon: Icon(Icons.filter_list, color: Colors.black),
-      
-      
+      offset: Offset(0, 40),  // Adjusts the position of the popup menu
+      child: Row(
+        children: [
+          Text('Filter by'),
+          SizedBox(width: 5),
+          Icon(Icons.arrow_drop_down),
+        ],
+      ),
       onSelected: (String role) async {
-                try {
-                  // Fetch agents with the selected role
-                  List<dynamic> agents = await fetchAgentsRole(role: role);
-                  print('Agents with role $role: ${agents.map((agent) => agent['displayName']).toList()}');
+        try {
+          // Fetch agents with the selected role
+          List<dynamic> agents = await fetchAgentsRole(role: role);
+          print('Agents with role $role: ${agents.map((agent) => agent['displayName']).toList()}');
 
-
-                  //push new page containing icons for agents
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AgentRolePage(agents: agents, role: role),
-                    ),
-                  );
-
-                } catch (e) {
-                  print('Error: $e');
-                }
-              },
-
+          // Push new page containing icons for agents
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AgentRolePage(agents: agents, role: role),
+            ),
+          );
+        } catch (e) {
+          print('Error: $e');
+        }
+      },
       itemBuilder: (BuildContext context) {
         return [
           PopupMenuItem(value: 'Duelist', child: Text('Duelist')),
@@ -63,6 +64,8 @@ class FilterButton extends StatelessWidget {
     );
   }
 }
+
+
 
 class AgentInfoState extends State<AgentInfo> {
   String? agentName;
@@ -261,54 +264,69 @@ class AgentInfoState extends State<AgentInfo> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+   
+   return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
-            iconSize: 16,
-            onPressed: () {
-              setState(() {
-                _isSearchOpen = !_isSearchOpen;
-                if (!_isSearchOpen) {
-                  _searchController.clear();
-                  _showSuggestions = false;
-                }
-              });
-            },
-          ),
-          title: AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-            width: _isSearchOpen ? MediaQuery.of(context).size.width : 0,
-            child: _isSearchOpen
-                ? TextField(
-                    style: TextStyle(
-                      fontFamily:
-                          Theme.of(context).textTheme.titleSmall!.fontFamily,
-                      fontSize:
-                          Theme.of(context).textTheme.titleSmall!.fontSize,
-                    ),
-                    controller: _searchController,
-                    focusNode: _searchFocusNode,
-                    decoration: const InputDecoration(
-                      hintText: 'Search agents',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: -10, vertical: 0),
-                    ),
-                  )
-                : null,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leadingWidth: 200,  // Adjust this to fit your layout
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0), // Add padding to the left
+          child: Row(
+            children: [
+              FilterButton(
+                onPressed: () {
+                  print('Filter button pressed');
+                },
+              ),
+              IconButton(
+                icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
+                iconSize: 16,
+                onPressed: () {
+                  setState(() {
+                    _isSearchOpen = !_isSearchOpen;
+                    if (!_isSearchOpen) {
+                      _searchController.clear();
+                      _showSuggestions = false;
+                    }
+                  });
+                },
+              ),
+            ],
           ),
         ),
+        title: AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+          width: _isSearchOpen ? MediaQuery.of(context).size.width - 200 : 0,  // Adjust this to fit your layout
+          child: _isSearchOpen
+              ? TextField(
+                  style: TextStyle(
+                    fontFamily: Theme.of(context).textTheme.titleSmall!.fontFamily,
+                    fontSize: Theme.of(context).textTheme.titleSmall!.fontSize,
+                  ),
+                  controller: _searchController,
+                  focusNode: FocusNode(),
+                  decoration: const InputDecoration(
+                    hintText: 'Search agents',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.transparent,
+                    contentPadding: EdgeInsets.symmetric(horizontal: -10, vertical: 0),
+                  ),
+                )
+              : null,
+        ),
+      ),
+
+      
+
         body: FutureBuilder<void>(
+            
             future: _dataFuture, // Initialize data before construction
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -336,39 +354,77 @@ class AgentInfoState extends State<AgentInfo> {
                           end: Alignment(1.9, 2.3),
                         ),
                       ),
-                      child: Stack(children: [
+                      child: Stack(
+                        
+                        children: [
                         if (_showSuggestions &&
                             _searchController.text.isNotEmpty)
+                          
                           Positioned(
                             top: 56,
                             left: 0,
                             right: 0,
                             child: Container(
-                              color: Colors.white,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: filteredAgents.length,
-                                itemBuilder: (context, index) {
-                                  final item = filteredAgents[index];
-                                  return ListTile(
-                                    leading: Image.network(item['displayIcon'],
-                                        fit: BoxFit.cover,
-                                        width: 50,
-                                        height: 50),
-                                    title: Text(item['displayName']),
-                                    onTap: () {
-                                      _searchController.text =
-                                          item['displayName'];
-                                      setState(() {
-                                        _showSuggestions = false;
-                                      });
-                                      fetchAgentData(item);
-                                    },
-                                  );
-                                },
-                              ),
+                            color: Colors.blue,
+
+
+                            child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount: filteredAgents.length,
+                                                          itemBuilder: (context, index) {
+                                                            final item = filteredAgents[index];
+                                                            
+                                                            
+                                                          return GestureDetector(
+                                                          onTap: () {
+                                                            print('Hi');
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) => AgentDetailsPage(
+                                                                  agentName: item['displayName'],
+                                                                  agentPhotoUrl: item['displayIcon'],
+                                                                  agentDescription: '', // You might want to fetch this data separately
+                                                                  agentRole: '', // You might want to fetch this data separately
+                                                                  agentRoleIcon: '', // You might want to fetch this data separately
+                                                                  agentRoleDescription: '', // You might want to fetch this data separately
+                                                                  agentAbility1Name: '', // You might want to fetch this data separately
+                                                                  agentAbility1Description: '', // You might want to fetch this data separately
+                                                                  agentAbility1Icon: '', // You might want to fetch this data separately
+                                                                  agentAbility2Name: '', // You might want to fetch this data separately
+                                                                  agentAbility2Description: '', // You might want to fetch this data separately
+                                                                  agentAbility2Icon: '', // You might want to fetch this data separately
+                                                                  agentAbility3Name: '', // You might want to fetch this data separately
+                                                                  agentAbility3Description: '', // You might want to fetch this data separately
+                                                                  agentAbility3Icon: '', // You might want to fetch this data separately
+                                                                  agentAbility4Name: '', // You might want to fetch this data separately
+                                                                  agentAbility4Description: '', // You might want to fetch this data separately
+                                                                  agentAbility4Icon: '', // You might want to fetch this data separately
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: ListTile(
+                                                            leading: Image.network(
+                                                              item['displayIcon'],
+                                                              fit: BoxFit.cover,
+                                                              width: 50,
+                                                              height: 50,
+                                                            ),
+                                                            title: Text(item['displayName']),
+                                                            onTap: () {
+                                                              _searchController.text = item['displayName'];
+                                                              setState(() {
+                                                                _showSuggestions = false;
+                                                              });
+                                                              fetchAgentData(item);
+                                                            },
+                                                          ),
+                                                        );
+                              },
                             ),
-                          ),
+                                          ),
+                                        ),
 
 
                     
@@ -514,18 +570,6 @@ class AgentInfoState extends State<AgentInfo> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    
-                                  // filter button. 
-                                    FilterButton(
-                                  onPressed: () {
-
-                                    print('Selected');
-                                  
-                                  },
-                                  
-                                  icon: Icons.filter_list, // Specify the icon for the button
-                                  iconColor: Colors.black, // Specify the color of the icon
-                                ),
                         
                                     Expanded(
                                       child: Padding(
