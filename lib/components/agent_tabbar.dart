@@ -130,7 +130,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http/http.dart' as http;
 
-class AgentTab extends StatefulWidget {
+
+ class AgentTab extends StatefulWidget {
   final Color? color;
   final Function(Map<String, dynamic>) onAgentSelected;
 
@@ -196,6 +197,9 @@ class AgentTabState extends State<AgentTab> with AutomaticKeepAliveClientMixin {
     );
   }
 
+
+
+
   Future<List<dynamic>> fetchAgents() async {
     final response =
         await http.get(Uri.parse('https://valorant-api.com/v1/agents'));
@@ -208,3 +212,28 @@ class AgentTabState extends State<AgentTab> with AutomaticKeepAliveClientMixin {
     return playableAgents;
   }
 }
+
+
+//fetch agents based on their role
+Future<List<dynamic>> fetchAgentsRole({String? role}) async {
+  final response = await http.get(Uri.parse('https://valorant-api.com/v1/agents'));
+  if (response.statusCode != 200) {
+    throw Exception('Failed to fetch agents data');
+  }
+
+  final data = jsonDecode(response.body);
+  final List<dynamic> agents = data['data'];
+
+  // Filter agents who are playable characters
+  final playableAgents = agents.where((agent) => agent['isPlayableCharacter'] == true).toList();
+
+  // If role is specified, filter by role
+  if (role != null && role.isNotEmpty) {
+    return playableAgents.where((agent) => agent['role'] != null && agent['role']['displayName'] == role).toList();
+  }
+
+  return playableAgents;
+}
+
+
+
