@@ -103,6 +103,7 @@ class AgentRolePage extends StatelessWidget {
                             agentDescription: agentDescription,
                             agentRole: agentRoleName,
                             agentRoleIcon: agentRoleIcon,
+                            agentRoleDescription: agentDescription,
                             agentAbility1Name: agentAbility1Name,
                             agentAbility1Icon: agentAbility1Icon,
                             agentAbility1Description: agentAbility1Description,
@@ -115,7 +116,6 @@ class AgentRolePage extends StatelessWidget {
                             agentAbility4Name: agentAbility4Name,
                             agentAbility4Icon: agentAbility4Icon,
                             agentAbility4Description: agentAbility4Description,
-                            agentRoleDescription: '',
                           ),
                         ),
                       );

@@ -7,6 +7,7 @@ import 'package:valinfo/pages/agent_info.dart';
 import 'package:valinfo/pages/onboarding.dart';
 import 'package:valinfo/utils/riotapi.dart';
 
+import 'package:valinfo/pages/agentt.dart';
 void main() {
   fetchValApiData().then((agentData) {
     runApp(MainApp(agentData: agentData));
@@ -57,10 +58,12 @@ class MainApp extends StatelessWidget {
             )),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/agentInfoPage',
+      initialRoute: '/',
       routes: {
+        //'/' : (context) => AgentInfoo(agent: agentData), // debugging
+
         //'/': (context) => const Onboarding(),
-        '/agentInfoPage': (context) => AgentInfo(agent: agentData),
+        '/': (context) => AgentInfo(agent: agentData),
         'specificAgentPage': (context) {
           final agentName = agentData['displayName'] ?? '';
           final agentPhotoUrl = agentData['fullPortrait'] ?? '';
