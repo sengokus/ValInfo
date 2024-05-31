@@ -14,19 +14,19 @@ class AgentDetailsPage extends StatefulWidget {
 
   final String agentAbility1Name;
   final String agentAbility1Description;
-  final String agentAbility1Icon;
+  final String agentAbility1Icon; 
 
   final String agentAbility2Name;
   final String agentAbility2Description;
-  final String agentAbility2Icon;
+  final String agentAbility2Icon; 
 
   final String agentAbility3Name;
   final String agentAbility3Description;
-  final String agentAbility3Icon;
+  final String agentAbility3Icon; 
 
   final String agentAbility4Name;
   final String agentAbility4Description;
-  final String agentAbility4Icon;
+  final String agentAbility4Icon; 
   //final List<String> agentAbilities;
 
   const AgentDetailsPage({
@@ -36,18 +36,22 @@ class AgentDetailsPage extends StatefulWidget {
     required this.agentRole,
     required this.agentRoleIcon,
     required this.agentRoleDescription,
+
     required this.agentAbility1Name,
     required this.agentAbility1Description,
-    required this.agentAbility1Icon,
+    required this.agentAbility1Icon, 
+
     required this.agentAbility2Name,
     required this.agentAbility2Description,
-    required this.agentAbility2Icon,
+    required this.agentAbility2Icon, 
+
     required this.agentAbility3Name,
     required this.agentAbility3Description,
-    required this.agentAbility3Icon,
+    required this.agentAbility3Icon, 
+
     required this.agentAbility4Name,
     required this.agentAbility4Description,
-    required this.agentAbility4Icon,
+    required this.agentAbility4Icon, 
     super.key,
   }) ;
 
@@ -78,17 +82,7 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
     log("Role: ${widget.agentRole} : ${widget.agentRoleIcon}");
 
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xff3e606c), Color(0xff4c7a8a), Color(0xff222042)],
-            stops: [0, 0.12, 1],
-            begin: Alignment(-0.4, -1.0),
-            end: Alignment(1.9, 2.3),
-          ),
-        ),
+      body: Center(
         child: Stack(
           children: [
             Stack(
@@ -115,12 +109,10 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                 top: 10,
                 right: 20,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       widget.agentName,
                       style: TextStyle(
-                        height: 1.0,
                         color: Theme.of(context).textTheme.titleMedium!.color,
                         fontFamily:
                             Theme.of(context).textTheme.titleMedium!.fontFamily,
@@ -129,13 +121,12 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                       ),
                     ),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: SizedBox(
-                              width: 12,
-                              height: 12,
+                              width: 20,
+                              height: 20,
                               child: Image.network(
                                 widget.agentRoleIcon != 'Loading'
                                     ? widget.agentRoleIcon
@@ -152,6 +143,7 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                                 .titleSmall!
                                 .fontFamily,
                             fontSize: 16,
+                            color: Colors.white,
                           ),
                         ),
                       ],
