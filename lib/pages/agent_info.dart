@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // For storing favorites to local storage
 import 'package:valinfo/components/agent_info_button.dart';
 import 'package:valinfo/components/agent_tabbar.dart';
+import 'agents_role.dart';
 import 'specific_agent_info.dart';
 
 class AgentInfo extends StatefulWidget {
@@ -17,6 +18,50 @@ class AgentInfo extends StatefulWidget {
 
   @override
   AgentInfoState createState() => AgentInfoState();
+}
+
+
+class FilterButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const FilterButton({required this.onPressed, super.key, required IconData icon, required Color iconColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      icon: Icon(Icons.filter_list, color: Colors.black),
+      
+      
+      onSelected: (String role) async {
+                try {
+                  // Fetch agents with the selected role
+                  List<dynamic> agents = await fetchAgentsRole(role: role);
+                  print('Agents with role $role: ${agents.map((agent) => agent['displayName']).toList()}');
+
+
+                  //push new page containing icons for agents
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AgentRolePage(agents: agents, role: role),
+                    ),
+                  );
+
+                } catch (e) {
+                  print('Error: $e');
+                }
+              },
+
+      itemBuilder: (BuildContext context) {
+        return [
+          PopupMenuItem(value: 'Duelist', child: Text('Duelist')),
+          PopupMenuItem(value: 'Initiator', child: Text('Initiator')),
+          PopupMenuItem(value: 'Controller', child: Text('Controller')),
+          PopupMenuItem(value: 'Sentinel', child: Text('Sentinel')),
+        ];
+      },
+    );
+  }
 }
 
 class AgentInfoState extends State<AgentInfo> {
@@ -213,6 +258,7 @@ class AgentInfoState extends State<AgentInfo> {
     setState(() => filteredAgents = suggestions);
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -323,6 +369,9 @@ class AgentInfoState extends State<AgentInfo> {
                               ),
                             ),
                           ),
+
+
+                    
                         Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -465,6 +514,19 @@ class AgentInfoState extends State<AgentInfo> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    
+                                  // filter button. 
+                                    FilterButton(
+                                  onPressed: () {
+
+                                    print('Selected');
+                                  
+                                  },
+                                  
+                                  icon: Icons.filter_list, // Specify the icon for the button
+                                  iconColor: Colors.black, // Specify the color of the icon
+                                ),
+                        
                                     Expanded(
                                       child: Padding(
                                           padding: const EdgeInsets.symmetric(
