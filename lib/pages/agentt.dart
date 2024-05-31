@@ -8,16 +8,16 @@ import 'package:valinfo/components/agent_tabbar.dart';
 import 'agents_role.dart';
 import 'specific_agent_info.dart';
 
-class AgentInfo extends StatefulWidget {
+class AgentInfoo extends StatefulWidget {
   final dynamic agent;
 
-  const AgentInfo({
+  const AgentInfoo({
     required this.agent,
     super.key,
   });
 
   @override
-  AgentInfoState createState() => AgentInfoState();
+  AgentInfooState createState() => AgentInfooState();
 }
 
 class FilterButton extends StatelessWidget {
@@ -57,7 +57,7 @@ class FilterButton extends StatelessWidget {
   }
 }
 
-class AgentInfoState extends State<AgentInfo> {
+class AgentInfooState extends State<AgentInfoo> {
   String? agentName;
   String? agentPhotoUrl;
   String? agentDescription;
@@ -221,7 +221,7 @@ class AgentInfoState extends State<AgentInfo> {
     prefs.setStringList('favorites', favoriteList);
   }
 
-  // Add this method to your AgentInfoState class
+  // Add this method to your AgentInfooState class
   void removeFromFavorites(int index) {
     setState(() {
       isFavorite[index] = false;
@@ -242,7 +242,6 @@ class AgentInfoState extends State<AgentInfo> {
   @override
   Widget build(BuildContext context) {
     log("First background: $agentBackground");
-
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -259,29 +258,31 @@ class AgentInfoState extends State<AgentInfo> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
-                    child:
-                        CircularProgressIndicator()); // Show a loading spinner
+                  child: CircularProgressIndicator(),
+                ); // Show a loading spinner
               } else if (snapshot.hasError) {
                 log("Error: ${snapshot.error}");
                 return const Center(
-                    child: Text('Error loading data')); // Handle errors
+                  child: Text('Error loading data'),
+                ); // Handle errors
               } else {
                 return Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xff3e606c),
-                            Color(0xff4c7a8a),
-                            Color(0xff222042)
-                          ],
-                          stops: [0, 0.12, 1],
-                          begin: Alignment(-0.4, -1.0),
-                          end: Alignment(1.9, 2.3),
-                        ),
+                    height: double.infinity,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xff3e606c),
+                          Color(0xff4c7a8a),
+                          Color(0xff222042)
+                        ],
+                        stops: [0, 0.12, 1],
+                        begin: Alignment(-0.4, -1.0),
+                        end: Alignment(1.9, 2.3),
                       ),
-                      child: Stack(children: [
+                    ),
+                    child: Stack(
+                      children: [
                         Positioned(
                           top: 56,
                           left: 0,
@@ -334,31 +335,53 @@ class AgentInfoState extends State<AgentInfo> {
                           ),
                         ),
                         Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                  child: PageView.builder(
-                                      controller: _pageController,
-                                      itemCount: agents
-                                          .length, // Use the agents list count
-                                      onPageChanged: (index) {
-                                        setState(() {
-                                          _currentPageIndex = index;
-                                          fetchAgentData(agents[index]);
-                                        });
-                                      },
-                                      itemBuilder: (context, index) {
-                                        return Stack(
-                                          alignment:
-                                              AlignmentDirectional.bottomEnd,
-                                          children: [
-                                            Positioned(
-                                              right: 7,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: PageView.builder(
+                                  controller: _pageController,
+                                  itemCount: agents
+                                      .length, // Use the agents list count
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      _currentPageIndex = index;
+                                      fetchAgentData(agents[index]);
+                                    });
+                                  },
+                                  itemBuilder: (context, index) {
+                                    return Stack(
+                                      alignment: AlignmentDirectional.bottomEnd,
+                                      children: [
+                                        Positioned(
+                                          right: 7,
+                                          child: Image.network(
+                                            agentBackground != null
+                                                ? agentBackground ??
+                                                    'Loading...'
+                                                : 'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png',
+                                            fit: BoxFit.fitHeight,
+                                            height: 610,
+                                            loadingBuilder:
+                                                (BuildContext context,
+                                                    Widget child,
+                                                    ImageChunkEvent?
+                                                        loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return const SizedBox(
+                                                height: 500,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        Positioned(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Hero(
+                                              tag: 'agentPhoto',
                                               child: Image.network(
-                                                agentBackground != null
-                                                    ? agentBackground ??
-                                                        'Loading...'
-                                                    : 'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png',
+                                                agentPhotoUrl!,
                                                 fit: BoxFit.fitHeight,
                                                 height: 610,
                                                 loadingBuilder:
@@ -375,136 +398,101 @@ class AgentInfoState extends State<AgentInfo> {
                                                 },
                                               ),
                                             ),
-                                            Positioned(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Hero(
-                                                  tag: 'agentPhoto',
-                                                  child: Image.network(
-                                                    agentPhotoUrl!,
-                                                    fit: BoxFit.fitHeight,
-                                                    height: 610,
-                                                    loadingBuilder: (BuildContext
-                                                            context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
-                                                      if (loadingProgress ==
-                                                          null) {
-                                                        return child;
-                                                      }
-                                                      return const SizedBox(
-                                                        height: 500,
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              top: 50,
-                                              right: 20,
-                                              child: Column(
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 50,
+                                          right: 20,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Row(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
+                                                    CrossAxisAlignment.center,
                                                 children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                right: 8.0),
-                                                        child: isFavorite[
-                                                                _currentPageIndex]
-                                                            ? const Icon(
-                                                                Icons.star,
-                                                                color: Colors
-                                                                    .white)
-                                                            : Icon(
-                                                                Icons
-                                                                    .star_border_outlined,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .indicatorColor),
-                                                      ),
-                                                      Text(
-                                                        agentName ??
-                                                            'Loading...',
-                                                        style: TextStyle(
-                                                          height: 1.0,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .titleMedium!
-                                                                  .color,
-                                                          fontFamily:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .titleMedium!
-                                                                  .fontFamily,
-                                                          fontSize:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .titleMedium!
-                                                                  .fontSize,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 8.0),
+                                                    child: isFavorite[
+                                                            _currentPageIndex]
+                                                        ? const Icon(Icons.star,
+                                                            color: Colors.white)
+                                                        : Icon(
+                                                            Icons
+                                                                .star_border_outlined,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .indicatorColor),
                                                   ),
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal:
-                                                                    8.0),
-                                                        child: SizedBox(
-                                                            width: 12,
-                                                            height: 12,
-                                                            child:
-                                                                Image.network(
-                                                              agentRoleIcon !=
-                                                                      null
-                                                                  ? agentRoleIcon ??
-                                                                      'Loading...'
-                                                                  : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
-                                                              fit: BoxFit.cover,
-                                                            )),
-                                                      ),
-                                                      Text(
-                                                        agentRoleName != null
-                                                            ? agentRoleName ??
-                                                                'Loading...'
-                                                            : 'Initiator',
-                                                        style: TextStyle(
-                                                          height: 0.2,
-                                                          fontFamily:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .titleSmall!
-                                                                  .fontFamily,
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                  Text(
+                                                    agentName ?? 'Loading...',
+                                                    style: TextStyle(
+                                                      height: 1.0,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .color,
+                                                      fontFamily:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .titleMedium!
+                                                              .fontFamily,
+                                                      fontSize:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .titleMedium!
+                                                              .fontSize,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          ],
-                                        );
-                                      })),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: SizedBox(
+                                                        width: 12,
+                                                        height: 12,
+                                                        child: Image.network(
+                                                          agentRoleIcon != null
+                                                              ? agentRoleIcon ??
+                                                                  'Loading...'
+                                                              : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
+                                                          fit: BoxFit.cover,
+                                                        )),
+                                                  ),
+                                                  Text(
+                                                    agentRoleName != null
+                                                        ? agentRoleName ??
+                                                            'Loading...'
+                                                        : 'Initiator',
+                                                    style: TextStyle(
+                                                      height: 0.2,
+                                                      fontFamily:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .titleSmall!
+                                                              .fontFamily,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }),
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -517,8 +505,7 @@ class AgentInfoState extends State<AgentInfo> {
                                                 "Added agent ${agents[_currentPageIndex]['displayName']} from favorites.");
                                         addToFavorite({
                                           'index': _currentPageIndex,
-                                          'agent':
-                                              agents[_currentPageIndex],
+                                          'agent': agents[_currentPageIndex],
                                         });
                                       },
                                       buttonText:
@@ -529,10 +516,8 @@ class AgentInfoState extends State<AgentInfo> {
                                           isFavorite[_currentPageIndex]
                                               ? Theme.of(context)
                                                   .indicatorColor
-                                              : Theme.of(context)
-                                                  .hoverColor,
+                                              : Theme.of(context).hoverColor,
                                     ),
-                                    const SizedBox(width: 10),
                                     AgentInfoButton(
                                       buttonText: 'VIEW CONTRACT',
                                       onPressed: () {
@@ -545,8 +530,8 @@ class AgentInfoState extends State<AgentInfo> {
                                               agentPhotoUrl: agentPhotoUrl!,
                                               agentDescription:
                                                   agentDescription!,
-                                              agentRole: agentRoleName ??
-                                                  'Initiator',
+                                              agentRole:
+                                                  agentRoleName ?? 'Initiator',
                                               agentRoleIcon: agentRoleIcon ??
                                                   'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
                                               agentRoleDescription:
@@ -562,8 +547,7 @@ class AgentInfoState extends State<AgentInfo> {
                                                   agentAbility1Icon ??
                                                       'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ability1/displayicon.png',
                                               agentAbility2Name:
-                                                  agentAbility2Name ??
-                                                      'Dizzy',
+                                                  agentAbility2Name ?? 'Dizzy',
                                               agentAbility2Description:
                                                   agentAbility2Description ??
                                                       'EQUIP Dizzy. FIRE to send Dizzy soaring forward through the air. Dizzy charges then unleashes plasma blasts at enemies in line of sight. Enemies hit by her plasma are Blinded. When Dizzy expires she reverts into a dormant globule. INTERACT to reclaim the globule and gain another Dizzy charge after a short cooldown.',
@@ -580,8 +564,7 @@ class AgentInfoState extends State<AgentInfo> {
                                                   agentAbility3Icon ??
                                                       'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/grenade/displayicon.png',
                                               agentAbility4Name:
-                                                  agentAbility4Name ??
-                                                      'Thrash',
+                                                  agentAbility4Name ?? 'Thrash',
                                               agentAbility4Description:
                                                   agentAbility4Description ??
                                                       'EQUIP Thrash. FIRE to link with Thrash’s mind and steer her through enemy territory. ACTIVATE to lunge forward and explode, Detaining any players in a small radius. When Thrash expires she reverts into a dormant globule. INTERACT to reclaim the globule and gain another Thrash charge after a short cooldown. Thrash can be reclaimed once.',
@@ -596,21 +579,11 @@ class AgentInfoState extends State<AgentInfo> {
                                           Theme.of(context).hoverColor,
                                     ),
                                   ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20.0),
-                                child: AgentTab(
-                                  color: Theme.of(context).hoverColor,
-                                  onAgentSelected: updateSelectedAgent,
-                                  currentIndex:
-                                      _currentPageIndex, // Pass the current index
-                                  agents: agents, // Pass the agents list
-                                ),
-                              ),
-                            ])
-                      ]));
+                                ))
+                          ],
+                        ),
+                      ],
+                    ));
               }
             }));
   }

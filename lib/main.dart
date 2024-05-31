@@ -57,10 +57,12 @@ class MainApp extends StatelessWidget {
             )),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/agentInfoPage',
+      initialRoute: '/',
       routes: {
+        //'/' : (context) => AgentInfoo(agent: agentData), // debugging
+
         //'/': (context) => const Onboarding(),
-        '/agentInfoPage': (context) => AgentInfo(agent: agentData),
+        '/': (context) => AgentInfo(agent: agentData),
         'specificAgentPage': (context) {
           final agentName = agentData['displayName'] ?? '';
           final agentPhotoUrl = agentData['fullPortrait'] ?? '';
