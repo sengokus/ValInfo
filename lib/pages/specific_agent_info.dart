@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -58,12 +59,19 @@ class AgentDetailsPage extends StatefulWidget {
 class _AgentDetailsPageState extends State<AgentDetailsPage> {
   late String currentAgentRole;
   late String currentAgentRoleDescription;
+  bool _animationCompleted = false;
 
   @override
   void initState() {
     super.initState();
     currentAgentRole = widget.agentRole;
     currentAgentRoleDescription = widget.agentRoleDescription;
+
+    Timer(const Duration(milliseconds: 350), () {
+      setState(() {
+        _animationCompleted = true;
+      });
+    });
   }
 
   void _updateAgentRole(String roleName, String roleDescription) {
@@ -89,21 +97,25 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
             end: Alignment(1.9, 2.3),
           ),
         ),
-        child: Stack(children: [
-          Stack(
-            children: [
-              Image.network(
+        child: Stack(
+          children: [
+            Hero(
+              tag: 'agentPhoto',
+              child: Image.network(
                 widget.agentPhotoUrl,
                 fit: BoxFit.fitHeight,
                 height: 800,
               ),
-              Positioned(
-                bottom: 50,
-                left: 0,
-                right: 0,
+            ),
+            Positioned(
+              bottom: 50,
+              left: 0,
+              right: 0,
+              child: AnimatedOpacity(
+                opacity: _animationCompleted ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 350),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   child: InfoCard(
                     agentDescription: widget.agentDescription,
                     agentRole: currentAgentRole,
@@ -111,58 +123,57 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                   ),
                 ),
               ),
-              Positioned(
-                top: 50,
-                right: 20,
-                child: Column(
-                  children: [
-                    Text(
-                      widget.agentName,
-                      style: TextStyle(
-                        height: 1.0,
-                        color: Theme.of(context).textTheme.titleMedium!.color,
-                        fontFamily:
-                            Theme.of(context).textTheme.titleMedium!.fontFamily,
-                        fontSize:
-                            Theme.of(context).textTheme.titleMedium!.fontSize,
-                      ),
+            ),
+            Positioned(
+              top: 50,
+              right: 20,
+              child: Column(
+                children: [
+                  Text(
+                    widget.agentName,
+                    style: TextStyle(
+                      height: 1.0,
+                      color: Theme.of(context).textTheme.titleMedium!.color,
+                      fontFamily: Theme.of(context).textTheme.titleMedium!.fontFamily,
+                      fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
                     ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: SizedBox(
-                              width: 12,
-                              height: 12,
-                              child: Image.network(
-                                widget.agentRoleIcon != 'Loading'
-                                    ? widget.agentRoleIcon
-                                    : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
-                                fit: BoxFit.cover,
-                              )),
-                        ),
-                        Text(
-                          widget.agentRole != 'Loading'
-                              ? widget.agentRole
-                              : 'Initiator',
-                          style: TextStyle(
-                            height: 0.2,
-                            fontFamily: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .fontFamily,
-                            fontSize: 16,
-                            color: Colors.white,
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: SizedBox(
+                          width: 12,
+                          height: 12,
+                          child: Image.network(
+                            widget.agentRoleIcon != 'Loading'
+                                ? widget.agentRoleIcon
+                                : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                      Text(
+                        widget.agentRole != 'Loading' ? widget.agentRole : 'Initiator',
+                        style: TextStyle(
+                          height: 0.2,
+                          fontFamily:
+                              Theme.of(context).textTheme.titleSmall!.fontFamily,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Positioned(
-                top: 50,
-                left: 20,
+            ),
+            Positioned(
+              top: 50,
+              left: 20,
+              child: AnimatedOpacity(
+                opacity: _animationCompleted ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 500),
                 child: AgentAbilities(
                   abilities: [
                     {
@@ -188,10 +199,10 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                   ],
                   onAbilityClicked: _updateAgentRole,
                 ),
-              ),
-            ],
-          ),
-        ]),
+            ),
+        )
+        ],
+        ),
       ),
     );
   }
