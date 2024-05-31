@@ -28,21 +28,21 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentRoleIcon;
   String? agentRoleDescription;
 
-  String? agentAbility1Name; 
+  String? agentAbility1Name;
   String? agentAbility1Icon;
-  String? agentAbility1Description; 
-  
-  String? agentAbility2Name; 
+  String? agentAbility1Description;
+
+  String? agentAbility2Name;
   String? agentAbility2Icon;
-  String? agentAbility2Description; 
-  
-  String? agentAbility3Name; 
+  String? agentAbility2Description;
+
+  String? agentAbility3Name;
   String? agentAbility3Icon;
-  String? agentAbility3Description; 
-  
-  String? agentAbility4Name; 
+  String? agentAbility3Description;
+
+  String? agentAbility4Name;
   String? agentAbility4Icon;
-  String? agentAbility4Description; 
+  String? agentAbility4Description;
 
   bool isPressedFavorite = false;
 
@@ -75,7 +75,7 @@ class AgentInfoState extends State<AgentInfo> {
   // Function to fetch agent data
   Future<void> fetchAgentData(dynamic agent) async {
     log("Fetching data for not: ${agent['displayName']} : ${agent['abilities'] != null ? agent['abilities'][3]['displayName'] : null}");
-    
+
     setState(() {
       agentName = agent['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
@@ -87,35 +87,46 @@ class AgentInfoState extends State<AgentInfo> {
       agentRoleDescription =
           agent['role'] != null ? agent['role']['description'] : null;
 
-      agentAbility1Name =
-          agent['abilities'] != null ? agent['abilities'][0]['displayName'] : null;
-      agentAbility1Icon =
-          agent['abilities'] != null ? agent['abilities'][0]['displayIcon'] : null;
-      agentAbility1Description =
-          agent['abilities'] != null ? agent['abilities'][0]['description'] : null;
-      
-      agentAbility2Name =
-          agent['abilities'] != null ? agent['abilities'][1]['displayName'] : null;
-      agentAbility2Icon =
-          agent['abilities'] != null ? agent['abilities'][1]['displayIcon'] : null;
-      agentAbility2Description =
-          agent['abilities'] != null ? agent['abilities'][1]['description'] : null;
+      agentAbility1Name = agent['abilities'] != null
+          ? agent['abilities'][0]['displayName']
+          : null;
+      agentAbility1Icon = agent['abilities'] != null
+          ? agent['abilities'][0]['displayIcon']
+          : null;
+      agentAbility1Description = agent['abilities'] != null
+          ? agent['abilities'][0]['description']
+          : null;
 
-      agentAbility3Name =
-          agent['abilities'] != null ? agent['abilities'][2]['displayName'] : null;
-      agentAbility3Icon =
-          agent['abilities'] != null ? agent['abilities'][2]['displayIcon'] : null;
-      agentAbility3Description =
-          agent['abilities'] != null ? agent['abilities'][2]['description'] : null; 
+      agentAbility2Name = agent['abilities'] != null
+          ? agent['abilities'][1]['displayName']
+          : null;
+      agentAbility2Icon = agent['abilities'] != null
+          ? agent['abilities'][1]['displayIcon']
+          : null;
+      agentAbility2Description = agent['abilities'] != null
+          ? agent['abilities'][1]['description']
+          : null;
 
-      agentAbility4Name =
-          agent['abilities'] != null ? agent['abilities'][3]['displayName'] : null;
-      agentAbility4Icon =
-          agent['abilities'] != null ? agent['abilities'][3]['displayIcon'] : null;
-      agentAbility4Description =
-          agent['abilities'] != null ? agent['abilities'][3]['description'] : null;
+      agentAbility3Name = agent['abilities'] != null
+          ? agent['abilities'][2]['displayName']
+          : null;
+      agentAbility3Icon = agent['abilities'] != null
+          ? agent['abilities'][2]['displayIcon']
+          : null;
+      agentAbility3Description = agent['abilities'] != null
+          ? agent['abilities'][2]['description']
+          : null;
+
+      agentAbility4Name = agent['abilities'] != null
+          ? agent['abilities'][3]['displayName']
+          : null;
+      agentAbility4Icon = agent['abilities'] != null
+          ? agent['abilities'][3]['displayIcon']
+          : null;
+      agentAbility4Description = agent['abilities'] != null
+          ? agent['abilities'][3]['description']
+          : null;
     });
-     
   }
 
   // Fetch the list of agents
@@ -146,14 +157,6 @@ class AgentInfoState extends State<AgentInfo> {
   void addToFavorite(Map<String, dynamic> selectedAgent) {
     setState(() {
       isFavorite[selectedAgent['index']] = !isFavorite[selectedAgent['index']];
-    });
-  }
-
-  void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
-    setState(() {
-      _currentPageIndex = selectedAgent['index'];
-      fetchAgentData(selectedAgent['agent']);
-      _pageController.jumpToPage(_currentPageIndex);
     });
   }
 
@@ -339,6 +342,18 @@ class AgentInfoState extends State<AgentInfo> {
                                               agentRoleDescription:
                                                   agentRoleDescription ??
                                                       'Loading',
+                                              agentAbility1Name: agentAbility1Name ?? 'Loading',
+                                              agentAbility1Description: agentAbility1Description ?? 'Loading',
+                                              agentAbility1Icon: agentAbility1Icon ?? 'Loading',
+                                              agentAbility2Name: agentAbility2Name ?? 'Loading',
+                                              agentAbility2Description: agentAbility2Description ?? 'Loading',
+                                              agentAbility2Icon: agentAbility2Icon ?? 'Loading',
+                                              agentAbility3Name: agentAbility3Name ?? 'Loading',
+                                              agentAbility3Description: agentAbility3Description ?? 'Loading',
+                                              agentAbility3Icon: agentAbility3Icon ?? 'Loading',
+                                              agentAbility4Name: agentAbility4Name ?? 'Loading',
+                                              agentAbility4Description: agentAbility4Description ?? 'Loading',
+                                              agentAbility4Icon: agentAbility4Icon ?? 'Loading',
                                             ),
                                           ),
                                         );
