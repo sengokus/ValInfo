@@ -46,23 +46,37 @@ class AgentInfoState extends State<AgentInfo> {
 
   bool isPressedFavorite = false;
 
+  TextEditingController _searchController = TextEditingController();
+
   late PageController _pageController;
   int _currentPageIndex = 0;
   List<dynamic> agents = []; // Store the agents list
+  List<dynamic> filteredAgents = [];
   List<bool> isFavorite = []; // Store favorites in list
 
   late Future<void> _dataFuture;
+  FocusNode _searchFocusNode = FocusNode();
+  bool _showSuggestions = false;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
     _dataFuture = initData();
+    _searchController.addListener(() {
+      searchAgent(_searchController.text);
+    });
+    _searchFocusNode.addListener(() {
+      setState(() {
+        _showSuggestions = _searchFocusNode.hasFocus;
+      });
+    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -187,9 +201,30 @@ class AgentInfoState extends State<AgentInfo> {
     });
   }
 
+  void searchAgent(String query) {
+    final suggestions = agents.where((agent) {
+      final agentList = agent['displayName'].toLowerCase();
+      final input = query.toLowerCase();
+
+      return agentList.contains(input);
+    }).toList();
+
+    setState(() => filteredAgents = suggestions);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          leading: Icon(Icons.search),
+          title: TextField(
+            controller: _searchController,
+            focusNode: _searchFocusNode,
+            decoration: InputDecoration(
+              hintText: 'Search Agents',
+            ),
+          ),
+        ),
         body: FutureBuilder<void>(
             future: _dataFuture, // Initialize data before construction
             builder: (context, snapshot) {
@@ -217,68 +252,128 @@ class AgentInfoState extends State<AgentInfo> {
                         end: Alignment(1.9, 2.3),
                       ),
                     ),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                              child: PageView.builder(
-                                  controller: _pageController,
-                                  itemCount: agents
-                                      .length, // Use the agents list count
-                                  onPageChanged: (index) {
-                                    setState(() {
-                                      _currentPageIndex = index;
-                                      fetchAgentData(agents[index]);
-                                    });
-                                  },
-                                  itemBuilder: (context, index) {
-                                    return Stack(
-                                      alignment: AlignmentDirectional.bottomEnd,
-                                      children: [
-                                        Positioned(
-                                          top: 20,
-                                          right: 20,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Row(
+                    child: Stack(
+                      children: [
+                        if (_showSuggestions &&
+                            _searchController.text.isNotEmpty)
+                          Positioned(
+                            top: 56, // Adjust as needed
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              color: Colors.white,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: filteredAgents.length,
+                                itemBuilder: (context, index) {
+                                  final item = filteredAgents[index];
+                                  return ListTile(
+                                    leading: Image.network(item['displayIcon'],
+                                        fit: BoxFit.cover,
+                                        width: 50,
+                                        height: 50),
+                                    title: Text(item['displayName']),
+                                    onTap: () {
+                                      _searchController.text =
+                                          item['displayName'];
+                                      setState(() {
+                                        _showSuggestions = false;
+                                      });
+                                      fetchAgentData(item);
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                  child: PageView.builder(
+                                      controller: _pageController,
+                                      itemCount: agents
+                                          .length, // Use the agents list count
+                                      onPageChanged: (index) {
+                                        setState(() {
+                                          _currentPageIndex = index;
+                                          fetchAgentData(agents[index]);
+                                        });
+                                      },
+                                      itemBuilder: (context, index) {
+                                        return Stack(
+                                          alignment:
+                                              AlignmentDirectional.bottomEnd,
+                                          children: [
+                                            // Positioned(
+                                            //   top: 20,
+                                            //   left: 20,
+                                            //   child: Icon(Icons.search),
+                                            // ),
+                                            Positioned(
+                                              top: 20,
+                                              right: 20,
+                                              child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                    CrossAxisAlignment.end,
                                                 children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 8.0),
-                                                    child: isFavorite[
-                                                            _currentPageIndex]
-                                                        ? const Icon(Icons.star,
-                                                            color: Colors.white)
-                                                        : Icon(
-                                                            Icons
-                                                                .star_border_outlined,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .indicatorColor),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                right: 8.0),
+                                                        child: isFavorite[
+                                                                _currentPageIndex]
+                                                            ? const Icon(
+                                                                Icons.star,
+                                                                color: Colors
+                                                                    .white)
+                                                            : Icon(
+                                                                Icons
+                                                                    .star_border_outlined,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .indicatorColor),
+                                                      ),
+                                                      Text(
+                                                        agentName ??
+                                                            'Loading...',
+                                                        style: TextStyle(
+                                                          height: 1.0,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleMedium!
+                                                                  .color,
+                                                          fontFamily:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleMedium!
+                                                                  .fontFamily,
+                                                          fontSize:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleMedium!
+                                                                  .fontSize,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                   Text(
-                                                    agentName ?? 'Loading...',
+                                                    agentRoleName ??
+                                                        'Loading...',
                                                     style: TextStyle(
-                                                      height: 1.0,
-                                                      color: Theme.of(context)
-                                                          .textTheme
-                                                          .titleMedium!
-                                                          .color,
                                                       fontFamily:
                                                           Theme.of(context)
                                                               .textTheme
-                                                              .titleMedium!
+                                                              .titleSmall!
                                                               .fontFamily,
-                                                      fontSize:
-                                                          Theme.of(context)
-                                                              .textTheme
-                                                              .titleMedium!
-                                                              .fontSize,
+                                                      fontSize: 16,
                                                     ),
                                                   ),
                                                 ],
@@ -319,8 +414,10 @@ class AgentInfoState extends State<AgentInfo> {
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
+                                            );
+                                          },
+                                          backgroundColor:
+                                              Theme.of(context).hoverColor,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8),
@@ -437,23 +534,25 @@ class AgentInfoState extends State<AgentInfo> {
                                       },
                                       backgroundColor:
                                           Theme.of(context).hoverColor,
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20.0),
-                            child: AgentTab(
-                              color: Theme.of(context).hoverColor,
-                              onAgentSelected: updateSelectedAgent,
-                              currentIndex:
-                                  _currentPageIndex, // Pass the current index
-                              agents: agents, // Pass the agents list
-                            ),
-                          ),
-                        ]));
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20.0),
+                                child: AgentTab(
+                                  color: Theme.of(context).hoverColor,
+                                  onAgentSelected: updateSelectedAgent,
+                                  currentIndex:
+                                      _currentPageIndex, // Pass the current index
+                                  agents: agents, // Pass the agents list
+                                ),
+                              ),
+                            ]),
+                      ],
+                    ));
               }
             }));
   }
