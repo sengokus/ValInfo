@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // For storing favorites to local storage
 import 'package:valinfo/components/agent_info_button.dart';
 import 'package:valinfo/components/agent_tabbar.dart';
 import 'specific_agent_info.dart';
@@ -23,26 +24,25 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentPhotoUrl;
   String? agentDescription;
   String? agentIcon;
-
   String? agentRoleName;
   String? agentRoleIcon;
   String? agentRoleDescription;
 
-  String? agentAbility1Name; 
+  String? agentAbility1Name;
   String? agentAbility1Icon;
-  String? agentAbility1Description; 
-  
-  String? agentAbility2Name; 
+  String? agentAbility1Description;
+
+  String? agentAbility2Name;
   String? agentAbility2Icon;
-  String? agentAbility2Description; 
-  
-  String? agentAbility3Name; 
+  String? agentAbility2Description;
+
+  String? agentAbility3Name;
   String? agentAbility3Icon;
-  String? agentAbility3Description; 
-  
-  String? agentAbility4Name; 
+  String? agentAbility3Description;
+
+  String? agentAbility4Name;
   String? agentAbility4Icon;
-  String? agentAbility4Description; 
+  String? agentAbility4Description;
 
   bool isPressedFavorite = false;
 
@@ -69,13 +69,14 @@ class AgentInfoState extends State<AgentInfo> {
   // Future to initialize data
   Future<void> initData() async {
     await fetchAgents(); // Fetch agents list
+    await loadFavorites(); // Fetch favorites list
     await fetchAgentData(widget.agent);
   }
 
   // Function to fetch agent data
   Future<void> fetchAgentData(dynamic agent) async {
     log("Fetching data for not: ${agent['displayName']} : ${agent['abilities'] != null ? agent['abilities'][3]['displayName'] : null}");
-    
+
     setState(() {
       agentName = agent['displayName'];
       agentPhotoUrl = agent['fullPortrait'];
@@ -87,35 +88,46 @@ class AgentInfoState extends State<AgentInfo> {
       agentRoleDescription =
           agent['role'] != null ? agent['role']['description'] : null;
 
-      agentAbility1Name =
-          agent['abilities'] != null ? agent['abilities'][0]['displayName'] : null;
-      agentAbility1Icon =
-          agent['abilities'] != null ? agent['abilities'][0]['displayIcon'] : null;
-      agentAbility1Description =
-          agent['abilities'] != null ? agent['abilities'][0]['description'] : null;
-      
-      agentAbility2Name =
-          agent['abilities'] != null ? agent['abilities'][1]['displayName'] : null;
-      agentAbility2Icon =
-          agent['abilities'] != null ? agent['abilities'][1]['displayIcon'] : null;
-      agentAbility2Description =
-          agent['abilities'] != null ? agent['abilities'][1]['description'] : null;
+      agentAbility1Name = agent['abilities'] != null
+          ? agent['abilities'][0]['displayName']
+          : null;
+      agentAbility1Icon = agent['abilities'] != null
+          ? agent['abilities'][0]['displayIcon']
+          : null;
+      agentAbility1Description = agent['abilities'] != null
+          ? agent['abilities'][0]['description']
+          : null;
 
-      agentAbility3Name =
-          agent['abilities'] != null ? agent['abilities'][2]['displayName'] : null;
-      agentAbility3Icon =
-          agent['abilities'] != null ? agent['abilities'][2]['displayIcon'] : null;
-      agentAbility3Description =
-          agent['abilities'] != null ? agent['abilities'][2]['description'] : null; 
+      agentAbility2Name = agent['abilities'] != null
+          ? agent['abilities'][1]['displayName']
+          : null;
+      agentAbility2Icon = agent['abilities'] != null
+          ? agent['abilities'][1]['displayIcon']
+          : null;
+      agentAbility2Description = agent['abilities'] != null
+          ? agent['abilities'][1]['description']
+          : null;
 
-      agentAbility4Name =
-          agent['abilities'] != null ? agent['abilities'][3]['displayName'] : null;
-      agentAbility4Icon =
-          agent['abilities'] != null ? agent['abilities'][3]['displayIcon'] : null;
-      agentAbility4Description =
-          agent['abilities'] != null ? agent['abilities'][3]['description'] : null;
+      agentAbility3Name = agent['abilities'] != null
+          ? agent['abilities'][2]['displayName']
+          : null;
+      agentAbility3Icon = agent['abilities'] != null
+          ? agent['abilities'][2]['displayIcon']
+          : null;
+      agentAbility3Description = agent['abilities'] != null
+          ? agent['abilities'][2]['description']
+          : null;
+
+      agentAbility4Name = agent['abilities'] != null
+          ? agent['abilities'][3]['displayName']
+          : null;
+      agentAbility4Icon = agent['abilities'] != null
+          ? agent['abilities'][3]['displayIcon']
+          : null;
+      agentAbility4Description = agent['abilities'] != null
+          ? agent['abilities'][3]['description']
+          : null;
     });
-     
   }
 
   // Fetch the list of agents
@@ -133,6 +145,16 @@ class AgentInfoState extends State<AgentInfo> {
     });
   }
 
+  // Load favorites from local storage
+  Future<void> loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favoriteList = prefs.getStringList('favorites') ?? [];
+    setState(() {
+      isFavorite =
+          agents.map((agent) => favoriteList.contains(agent['uuid'])).toList();
+    });
+  }
+
   // Update screen based on selected agent
   void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
     setState(() {
@@ -143,17 +165,25 @@ class AgentInfoState extends State<AgentInfo> {
   }
 
   // Add agent to favorites
-  void addToFavorite(Map<String, dynamic> selectedAgent) {
+  void addToFavorite(Map<String, dynamic> selectedAgent) async {
     setState(() {
       isFavorite[selectedAgent['index']] = !isFavorite[selectedAgent['index']];
     });
+
+    final prefs = await SharedPreferences.getInstance();
+    final favoriteList = isFavorite
+        .asMap()
+        .entries
+        .where((entry) => entry.value)
+        .map((entry) => agents[entry.key]['uuid'] as String)
+        .toList();
+    prefs.setStringList('favorites', favoriteList);
   }
 
-  void updateSelectedAgent(Map<String, dynamic> selectedAgent) {
+  // Add this method to your AgentInfoState class
+  void removeFromFavorites(int index) {
     setState(() {
-      _currentPageIndex = selectedAgent['index'];
-      fetchAgentData(selectedAgent['agent']);
-      _pageController.jumpToPage(_currentPageIndex);
+      isFavorite[index] = false;
     });
   }
 
@@ -168,10 +198,13 @@ class AgentInfoState extends State<AgentInfo> {
                     child:
                         CircularProgressIndicator()); // Show a loading spinner
               } else if (snapshot.hasError) {
+                log("Error: ${snapshot.error}");
                 return const Center(
                     child: Text('Error loading data')); // Handle errors
               } else {
                 return Container(
+                    height: double.infinity,
+                    width: double.infinity,
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -250,18 +283,41 @@ class AgentInfoState extends State<AgentInfo> {
                                                   ),
                                                 ],
                                               ),
-                                              Text(
-                                                agentRoleName != null
-                                                    ? agentRoleName ??
-                                                        'Loading...'
-                                                    : 'Initiator',
-                                                style: TextStyle(
-                                                  fontFamily: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .fontFamily,
-                                                  fontSize: 16,
-                                                ),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: SizedBox(
+                                                        width: 12,
+                                                        height: 12,
+                                                        child: Image.network(
+                                                          agentRoleIcon != null
+                                                              ? agentRoleIcon ??
+                                                                  'Loading...'
+                                                              : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
+                                                          fit: BoxFit.cover,
+                                                        )),
+                                                  ),
+                                                  Text(
+                                                    agentRoleName != null
+                                                        ? agentRoleName ??
+                                                            'Loading...'
+                                                        : 'Initiator',
+                                                    style: TextStyle(
+                                                      height: 0.2,
+                                                      fontFamily:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .titleSmall!
+                                                              .fontFamily,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
@@ -338,6 +394,42 @@ class AgentInfoState extends State<AgentInfo> {
                                                   agentRoleIcon ?? 'Loading',
                                               agentRoleDescription:
                                                   agentRoleDescription ??
+                                                      'Loading',
+                                              agentAbility1Name:
+                                                  agentAbility1Name ??
+                                                      'Loading',
+                                              agentAbility1Description:
+                                                  agentAbility1Description ??
+                                                      'Loading',
+                                              agentAbility1Icon:
+                                                  agentAbility1Icon ??
+                                                      'Loading',
+                                              agentAbility2Name:
+                                                  agentAbility2Name ??
+                                                      'Loading',
+                                              agentAbility2Description:
+                                                  agentAbility2Description ??
+                                                      'Loading',
+                                              agentAbility2Icon:
+                                                  agentAbility2Icon ??
+                                                      'Loading',
+                                              agentAbility3Name:
+                                                  agentAbility3Name ??
+                                                      'Loading',
+                                              agentAbility3Description:
+                                                  agentAbility3Description ??
+                                                      'Loading',
+                                              agentAbility3Icon:
+                                                  agentAbility3Icon ??
+                                                      'Loading',
+                                              agentAbility4Name:
+                                                  agentAbility4Name ??
+                                                      'Loading',
+                                              agentAbility4Description:
+                                                  agentAbility4Description ??
+                                                      'Loading',
+                                              agentAbility4Icon:
+                                                  agentAbility4Icon ??
                                                       'Loading',
                                             ),
                                           ),

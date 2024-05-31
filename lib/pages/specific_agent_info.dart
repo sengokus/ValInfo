@@ -12,19 +12,19 @@ class AgentDetailsPage extends StatelessWidget {
 
   final String agentAbility1Name;
   final String agentAbility1Description;
-  final String agentAbility1Icon; 
+  final String agentAbility1Icon;
 
   final String agentAbility2Name;
   final String agentAbility2Description;
-  final String agentAbility2Icon; 
+  final String agentAbility2Icon;
 
   final String agentAbility3Name;
   final String agentAbility3Description;
-  final String agentAbility3Icon; 
+  final String agentAbility3Icon;
 
   final String agentAbility4Name;
   final String agentAbility4Description;
-  final String agentAbility4Icon; 
+  final String agentAbility4Icon;
   //final List<String> agentAbilities;
 
   const AgentDetailsPage({
@@ -34,22 +34,18 @@ class AgentDetailsPage extends StatelessWidget {
     required this.agentRole,
     required this.agentRoleIcon,
     required this.agentRoleDescription,
-
     required this.agentAbility1Name,
     required this.agentAbility1Description,
-    required this.agentAbility1Icon, 
-
+    required this.agentAbility1Icon,
     required this.agentAbility2Name,
     required this.agentAbility2Description,
-    required this.agentAbility2Icon, 
-
+    required this.agentAbility2Icon,
     required this.agentAbility3Name,
     required this.agentAbility3Description,
-    required this.agentAbility3Icon, 
-
+    required this.agentAbility3Icon,
     required this.agentAbility4Name,
     required this.agentAbility4Description,
-    required this.agentAbility4Icon, 
+    required this.agentAbility4Icon,
     super.key,
     //required this.agentAbilities,
   });
@@ -57,15 +53,26 @@ class AgentDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log("Role: $agentRole : $agentRoleIcon");
+    log("Role Description: $agentRoleDescription");
 
     return Scaffold(
-      body: Center(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff3e606c), Color(0xff4c7a8a), Color(0xff222042)],
+            stops: [0, 0.12, 1],
+            begin: Alignment(-0.4, -1.0),
+            end: Alignment(1.9, 2.3),
+          ),
+        ),
         child: Stack(
           children: [
             Image.network(
               agentPhotoUrl,
               fit: BoxFit.fitHeight,
-              height: 600,
+              height: 700,
             ),
             Positioned(
               bottom: 50,
@@ -108,7 +115,9 @@ class AgentDetailsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        agentRole.toUpperCase(),
+                        agentRole != 'Loading'
+                            ? agentRole.toUpperCase()
+                            : 'INITIATOR',
                         style: TextStyle(
                           fontFamily: Theme.of(context)
                               .textTheme
@@ -120,7 +129,9 @@ class AgentDetailsPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        agentRoleDescription,
+                        agentRoleDescription != 'Loading'
+                            ? agentRoleDescription
+                            : 'Initiators challenge angles by setting up their team to enter contested ground and push defenders away.',
                         style: const TextStyle(
                           fontSize: 15,
                           height: 1.5,
@@ -137,10 +148,12 @@ class AgentDetailsPage extends StatelessWidget {
                 top: 10,
                 right: 20,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       agentName,
                       style: TextStyle(
+                        height: 1.0,
                         color: Theme.of(context).textTheme.titleMedium!.color,
                         fontFamily:
                             Theme.of(context).textTheme.titleMedium!.fontFamily,
@@ -149,12 +162,13 @@ class AgentDetailsPage extends StatelessWidget {
                       ),
                     ),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: SizedBox(
-                              width: 20,
-                              height: 20,
+                              width: 12,
+                              height: 12,
                               child: Image.network(
                                 agentRoleIcon != 'Loading'
                                     ? agentRoleIcon
@@ -164,9 +178,13 @@ class AgentDetailsPage extends StatelessWidget {
                         ),
                         Text(
                           agentRole != 'Loading' ? agentRole : 'Initiator',
-                          style: const TextStyle(
+                          style: TextStyle(
+                            height: 0.2,
+                            fontFamily: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .fontFamily,
                             fontSize: 16,
-                            color: Colors.white,
                           ),
                         ),
                       ],
