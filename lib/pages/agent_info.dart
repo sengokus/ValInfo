@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // For storing favorites to local storage
 import 'package:valinfo/components/agent_info_button.dart';
 import 'package:valinfo/components/agent_tabbar.dart';
+import 'agents_role.dart';
 import 'specific_agent_info.dart';
 
 class AgentInfo extends StatefulWidget {
@@ -17,6 +18,43 @@ class AgentInfo extends StatefulWidget {
 
   @override
   AgentInfoState createState() => AgentInfoState();
+}
+
+class FilterButton extends StatelessWidget {
+  const FilterButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      offset: const Offset(0, 20),
+      child: const Icon(Icons.arrow_drop_down),
+      onSelected: (String role) async {
+        try {
+          // Fetch agents with the selected role
+          List<dynamic> agents = await fetchAgentsRole(role: role);
+          log('Agents with role $role: ${agents.map((agent) => agent['displayName']).toList()}');
+
+          // Push new page containing icons for agents
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AgentRolePage(agents: agents, role: role),
+            ),
+          );
+        } catch (e) {
+          throw ('Error: $e');
+        }
+      },
+      itemBuilder: (BuildContext context) {
+        return [
+          const PopupMenuItem(value: 'Duelist', child: Text('Duelist')),
+          const PopupMenuItem(value: 'Initiator', child: Text('Initiator')),
+          const PopupMenuItem(value: 'Controller', child: Text('Controller')),
+          const PopupMenuItem(value: 'Sentinel', child: Text('Sentinel')),
+        ];
+      },
+    );
+  }
 }
 
 class AgentInfoState extends State<AgentInfo> {
@@ -233,23 +271,35 @@ class AgentInfoState extends State<AgentInfo> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          leading: IconButton(
-            icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
-            iconSize: 16,
-            onPressed: () {
-              setState(() {
-                _isSearchOpen = !_isSearchOpen;
-                if (!_isSearchOpen) {
-                  _searchController.clear();
-                  _showSuggestions = false;
-                }
-              });
-            },
+          leadingWidth: 75,
+          leading: Padding(
+            padding:
+                const EdgeInsets.only(left: 8.0), // Add padding to the left
+            child: Row(
+              children: [
+                const FilterButton(),
+                IconButton(
+                  icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
+                  iconSize: 16,
+                  onPressed: () {
+                    setState(() {
+                      _isSearchOpen = !_isSearchOpen;
+                      if (!_isSearchOpen) {
+                        _searchController.clear();
+                        _showSuggestions = false;
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
           title: AnimatedContainer(
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeInOut,
-            width: _isSearchOpen ? MediaQuery.of(context).size.width : 0,
+            width: _isSearchOpen
+                ? MediaQuery.of(context).size.width - 200
+                : 0, // Adjust this to fit your layout
             child: _isSearchOpen
                 ? TextField(
                     style: TextStyle(
@@ -259,18 +309,14 @@ class AgentInfoState extends State<AgentInfo> {
                           Theme.of(context).textTheme.titleSmall!.fontSize,
                     ),
                     controller: _searchController,
-                    focusNode: _searchFocusNode,
+                    focusNode: FocusNode(),
                     decoration: const InputDecoration(
-                      hintText: 'Search agents',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: -10, vertical: 0),
-                    ),
+                        hintText: 'Search agents',
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 0, vertical: 0)),
                   )
                 : null,
           ),
@@ -311,26 +357,59 @@ class AgentInfoState extends State<AgentInfo> {
                             left: 0,
                             right: 0,
                             child: Container(
-                              color: Colors.white,
+                              color: Colors.blue,
                               child: ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: filteredAgents.length,
                                 itemBuilder: (context, index) {
                                   final item = filteredAgents[index];
-                                  return ListTile(
-                                    leading: Image.network(item['displayIcon'],
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              AgentDetailsPage(
+                                            agentName: item['displayName'],
+                                            agentPhotoUrl: item['displayIcon'],
+                                            agentDescription: '',
+                                            agentRole: '',
+                                            agentRoleIcon: '',
+                                            agentRoleDescription: '',
+                                            agentAbility1Name: '',
+                                            agentAbility1Description: '',
+                                            agentAbility1Icon: '',
+                                            agentAbility2Name: '',
+                                            agentAbility2Description: '',
+                                            agentAbility2Icon: '',
+                                            agentAbility3Name: '',
+                                            agentAbility3Description: '',
+                                            agentAbility3Icon: '',
+                                            agentAbility4Name: '',
+                                            agentAbility4Description: '',
+                                            agentAbility4Icon: '',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: ListTile(
+                                      leading: Image.network(
+                                        item['displayIcon'],
                                         fit: BoxFit.cover,
                                         width: 50,
-                                        height: 50),
-                                    title: Text(item['displayName']),
-                                    onTap: () {
-                                      _searchController.text =
-                                          item['displayName'];
-                                      setState(() {
-                                        _showSuggestions = false;
-                                      });
-                                      fetchAgentData(item);
-                                    },
+                                        height: 50,
+                                      ),
+                                      title: Text(item['displayName']),
+                                      onTap: () {
+                                        _searchController.text =
+                                            item['displayName'];
+                                        setState(() {
+                                          _showSuggestions = false;
+                                        });
+                                        fetchAgentData(item);
+                                      },
+                                    ),
                                   );
                                 },
                               ),
