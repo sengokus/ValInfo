@@ -59,7 +59,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/agentInfoPage',
       routes: {
-        '/': (context) => const Onboarding(),
+        //'/': (context) => const Onboarding(),
         '/agentInfoPage': (context) => AgentInfo(agent: agentData),
         'specificAgentPage': (context) {
           final agentName = agentData['displayName'] ?? '';
