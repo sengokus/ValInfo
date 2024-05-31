@@ -21,26 +21,18 @@ class AgentInfo extends StatefulWidget {
 }
 
 class FilterButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  const FilterButton({required this.onPressed, super.key});
+  const FilterButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      offset: Offset(0, 40),  // Adjusts the position of the popup menu
-      child: Row(
-        children: [
-          Text('Filter by'),
-          SizedBox(width: 5),
-          Icon(Icons.arrow_drop_down),
-        ],
-      ),
+      offset: const Offset(0, 20),
+      child: const Icon(Icons.arrow_drop_down),
       onSelected: (String role) async {
         try {
           // Fetch agents with the selected role
           List<dynamic> agents = await fetchAgentsRole(role: role);
-          print('Agents with role $role: ${agents.map((agent) => agent['displayName']).toList()}');
+          log('Agents with role $role: ${agents.map((agent) => agent['displayName']).toList()}');
 
           // Push new page containing icons for agents
           Navigator.push(
@@ -50,22 +42,20 @@ class FilterButton extends StatelessWidget {
             ),
           );
         } catch (e) {
-          print('Error: $e');
+          throw ('Error: $e');
         }
       },
       itemBuilder: (BuildContext context) {
         return [
-          PopupMenuItem(value: 'Duelist', child: Text('Duelist')),
-          PopupMenuItem(value: 'Initiator', child: Text('Initiator')),
-          PopupMenuItem(value: 'Controller', child: Text('Controller')),
-          PopupMenuItem(value: 'Sentinel', child: Text('Sentinel')),
+          const PopupMenuItem(value: 'Duelist', child: Text('Duelist')),
+          const PopupMenuItem(value: 'Initiator', child: Text('Initiator')),
+          const PopupMenuItem(value: 'Controller', child: Text('Controller')),
+          const PopupMenuItem(value: 'Sentinel', child: Text('Sentinel')),
         ];
       },
     );
   }
 }
-
-
 
 class AgentInfoState extends State<AgentInfo> {
   String? agentName;
@@ -261,72 +251,64 @@ class AgentInfoState extends State<AgentInfo> {
     setState(() => filteredAgents = suggestions);
   }
 
-
   @override
   Widget build(BuildContext context) {
-   
-   return Scaffold(
+    return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leadingWidth: 200,  // Adjust this to fit your layout
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0), // Add padding to the left
-          child: Row(
-            children: [
-              FilterButton(
-                onPressed: () {
-                  print('Filter button pressed');
-                },
-              ),
-              IconButton(
-                icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
-                iconSize: 16,
-                onPressed: () {
-                  setState(() {
-                    _isSearchOpen = !_isSearchOpen;
-                    if (!_isSearchOpen) {
-                      _searchController.clear();
-                      _showSuggestions = false;
-                    }
-                  });
-                },
-              ),
-            ],
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leadingWidth: 75,
+          leading: Padding(
+            padding:
+                const EdgeInsets.only(left: 8.0), // Add padding to the left
+            child: Row(
+              children: [
+                const FilterButton(),
+                IconButton(
+                  icon: Icon(_isSearchOpen ? Icons.close : Icons.search),
+                  iconSize: 16,
+                  onPressed: () {
+                    setState(() {
+                      _isSearchOpen = !_isSearchOpen;
+                      if (!_isSearchOpen) {
+                        _searchController.clear();
+                        _showSuggestions = false;
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          title: AnimatedContainer(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+            width: _isSearchOpen
+                ? MediaQuery.of(context).size.width - 200
+                : 0, // Adjust this to fit your layout
+            child: _isSearchOpen
+                ? TextField(
+                    style: TextStyle(
+                      fontFamily:
+                          Theme.of(context).textTheme.titleSmall!.fontFamily,
+                      fontSize:
+                          Theme.of(context).textTheme.titleSmall!.fontSize,
+                    ),
+                    controller: _searchController,
+                    focusNode: FocusNode(),
+                    decoration: const InputDecoration(
+                        hintText: 'Search agents',
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 0, vertical: 0)),
+                  )
+                : null,
           ),
         ),
-        title: AnimatedContainer(
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeInOut,
-          width: _isSearchOpen ? MediaQuery.of(context).size.width - 200 : 0,  // Adjust this to fit your layout
-          child: _isSearchOpen
-              ? TextField(
-                  style: TextStyle(
-                    fontFamily: Theme.of(context).textTheme.titleSmall!.fontFamily,
-                    fontSize: Theme.of(context).textTheme.titleSmall!.fontSize,
-                  ),
-                  controller: _searchController,
-                  focusNode: FocusNode(),
-                  decoration: const InputDecoration(
-                    hintText: 'Search agents',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    contentPadding: EdgeInsets.symmetric(horizontal: -10, vertical: 0),
-                  ),
-                )
-              : null,
-        ),
-      ),
-
-      
-
         body: FutureBuilder<void>(
-            
             future: _dataFuture, // Initialize data before construction
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -354,80 +336,72 @@ class AgentInfoState extends State<AgentInfo> {
                           end: Alignment(1.9, 2.3),
                         ),
                       ),
-                      child: Stack(
-                        
-                        children: [
+                      child: Stack(children: [
                         if (_showSuggestions &&
                             _searchController.text.isNotEmpty)
-                          
                           Positioned(
                             top: 56,
                             left: 0,
                             right: 0,
                             child: Container(
-                            color: Colors.blue,
+                              color: Colors.blue,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: filteredAgents.length,
+                                itemBuilder: (context, index) {
+                                  final item = filteredAgents[index];
 
-
-                            child: ListView.builder(
-                                                          shrinkWrap: true,
-                                                          itemCount: filteredAgents.length,
-                                                          itemBuilder: (context, index) {
-                                                            final item = filteredAgents[index];
-                                                            
-                                                            
-                                                          return GestureDetector(
-                                                          onTap: () {
-                                                            print('Hi');
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) => AgentDetailsPage(
-                                                                  agentName: item['displayName'],
-                                                                  agentPhotoUrl: item['displayIcon'],
-                                                                  agentDescription: '', // You might want to fetch this data separately
-                                                                  agentRole: '', // You might want to fetch this data separately
-                                                                  agentRoleIcon: '', // You might want to fetch this data separately
-                                                                  agentRoleDescription: '', // You might want to fetch this data separately
-                                                                  agentAbility1Name: '', // You might want to fetch this data separately
-                                                                  agentAbility1Description: '', // You might want to fetch this data separately
-                                                                  agentAbility1Icon: '', // You might want to fetch this data separately
-                                                                  agentAbility2Name: '', // You might want to fetch this data separately
-                                                                  agentAbility2Description: '', // You might want to fetch this data separately
-                                                                  agentAbility2Icon: '', // You might want to fetch this data separately
-                                                                  agentAbility3Name: '', // You might want to fetch this data separately
-                                                                  agentAbility3Description: '', // You might want to fetch this data separately
-                                                                  agentAbility3Icon: '', // You might want to fetch this data separately
-                                                                  agentAbility4Name: '', // You might want to fetch this data separately
-                                                                  agentAbility4Description: '', // You might want to fetch this data separately
-                                                                  agentAbility4Icon: '', // You might want to fetch this data separately
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          child: ListTile(
-                                                            leading: Image.network(
-                                                              item['displayIcon'],
-                                                              fit: BoxFit.cover,
-                                                              width: 50,
-                                                              height: 50,
-                                                            ),
-                                                            title: Text(item['displayName']),
-                                                            onTap: () {
-                                                              _searchController.text = item['displayName'];
-                                                              setState(() {
-                                                                _showSuggestions = false;
-                                                              });
-                                                              fetchAgentData(item);
-                                                            },
-                                                          ),
-                                                        );
-                              },
-                            ),
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              AgentDetailsPage(
+                                            agentName: item['displayName'],
+                                            agentPhotoUrl: item['displayIcon'],
+                                            agentDescription: '',
+                                            agentRole: '',
+                                            agentRoleIcon: '',
+                                            agentRoleDescription: '',
+                                            agentAbility1Name: '',
+                                            agentAbility1Description: '',
+                                            agentAbility1Icon: '',
+                                            agentAbility2Name: '',
+                                            agentAbility2Description: '',
+                                            agentAbility2Icon: '',
+                                            agentAbility3Name: '',
+                                            agentAbility3Description: '',
+                                            agentAbility3Icon: '',
+                                            agentAbility4Name: '',
+                                            agentAbility4Description: '',
+                                            agentAbility4Icon: '',
                                           ),
                                         ),
-
-
-                    
+                                      );
+                                    },
+                                    child: ListTile(
+                                      leading: Image.network(
+                                        item['displayIcon'],
+                                        fit: BoxFit.cover,
+                                        width: 50,
+                                        height: 50,
+                                      ),
+                                      title: Text(item['displayName']),
+                                      onTap: () {
+                                        _searchController.text =
+                                            item['displayName'];
+                                        setState(() {
+                                          _showSuggestions = false;
+                                        });
+                                        fetchAgentData(item);
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
                         Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -570,7 +544,6 @@ class AgentInfoState extends State<AgentInfo> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                        
                                     Expanded(
                                       child: Padding(
                                           padding: const EdgeInsets.symmetric(

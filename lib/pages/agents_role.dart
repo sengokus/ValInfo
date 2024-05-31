@@ -5,7 +5,8 @@ class AgentRolePage extends StatelessWidget {
   final List<dynamic> agents;
   final String role;
 
-  const AgentRolePage({required this.agents, required this.role, Key? key}) : super(key: key);
+  const AgentRolePage({required this.agents, required this.role, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,22 +44,33 @@ class AgentRolePage extends StatelessWidget {
                 final agentDescription = agent['description'] ?? '';
                 final agentRoleIcon = agent['role']['displayIcon'] ?? '';
                 final agentRoleName = agent['role']['displayName'] ?? '';
-                final agentAbility1Name = agent['abilities'][0]['displayName'] ?? '';
-                final agentAbility1Icon = agent['abilities'][0]['displayIcon'] ?? '';
-                final agentAbility1Description = agent['abilities'][0]['description'] ?? '';
-                final agentAbility2Name = agent['abilities'][1]['displayName'] ?? '';
-                final agentAbility2Icon = agent['abilities'][1]['displayIcon'] ?? '';
-                final agentAbility2Description = agent['abilities'][1]['description'] ?? '';
-                final agentAbility3Name = agent['abilities'][2]['displayName'] ?? '';
-                final agentAbility3Icon = agent['abilities'][2]['displayIcon'] ?? '';
-                final agentAbility3Description = agent['abilities'][2]['description'] ?? '';
-                final agentAbility4Name = agent['abilities'][3]['displayName'] ?? '';
-                final agentAbility4Icon = agent['abilities'][3]['displayIcon'] ?? '';
-                final agentAbility4Description = agent['abilities'][3]['description'] ?? '';
+                final agentAbility1Name =
+                    agent['abilities'][0]['displayName'] ?? '';
+                final agentAbility1Icon =
+                    agent['abilities'][0]['displayIcon'] ?? '';
+                final agentAbility1Description =
+                    agent['abilities'][0]['description'] ?? '';
+                final agentAbility2Name =
+                    agent['abilities'][1]['displayName'] ?? '';
+                final agentAbility2Icon =
+                    agent['abilities'][1]['displayIcon'] ?? '';
+                final agentAbility2Description =
+                    agent['abilities'][1]['description'] ?? '';
+                final agentAbility3Name =
+                    agent['abilities'][2]['displayName'] ?? '';
+                final agentAbility3Icon =
+                    agent['abilities'][2]['displayIcon'] ?? '';
+                final agentAbility3Description =
+                    agent['abilities'][2]['description'] ?? '';
+                final agentAbility4Name =
+                    agent['abilities'][3]['displayName'] ?? '';
+                final agentAbility4Icon =
+                    agent['abilities'][3]['displayIcon'] ?? '';
+                final agentAbility4Description =
+                    agent['abilities'][3]['description'] ?? '';
 
                 return GestureDetector(
                   onTap: () {
-
                     // Navigate to AgentDetailsPage when the card is tapped
                     Navigator.push(
                       context,
@@ -80,7 +92,8 @@ class AgentRolePage extends StatelessWidget {
                           agentAbility3Description: agentAbility3Description,
                           agentAbility4Name: agentAbility4Name,
                           agentAbility4Icon: agentAbility4Icon,
-                          agentAbility4Description: agentAbility4Description, agentRoleDescription: '',
+                          agentAbility4Description: agentAbility4Description,
+                          agentRoleDescription: '',
                         ),
                       ),
                     );
