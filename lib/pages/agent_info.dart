@@ -27,6 +27,7 @@ class AgentInfoState extends State<AgentInfo> {
   String? agentRoleName;
   String? agentRoleIcon;
   String? agentRoleDescription;
+  String? agentBackground;
 
   String? agentAbility1Name;
   String? agentAbility1Icon;
@@ -111,6 +112,7 @@ class AgentInfoState extends State<AgentInfo> {
           agent['role'] != null ? agent['role']['displayIcon'] : null;
       agentRoleDescription =
           agent['role'] != null ? agent['role']['description'] : null;
+      agentBackground = agent['background'];
 
       agentAbility1Name = agent['abilities'] != null
           ? agent['abilities'][0]['displayName']
@@ -224,6 +226,8 @@ class AgentInfoState extends State<AgentInfo> {
 
   @override
   Widget build(BuildContext context) {
+    log("First background: $agentBackground");
+
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -351,27 +355,53 @@ class AgentInfoState extends State<AgentInfo> {
                                           alignment:
                                               AlignmentDirectional.bottomEnd,
                                           children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(8),
-                                              child: Hero(
-                                                tag: 'agentPhoto',
-                                                child: Image.network(
-                                                  agentPhotoUrl!,
-                                                  fit: BoxFit.fitHeight,
-                                                  height: 610,
-                                                  loadingBuilder:
-                                                      (BuildContext context,
-                                                          Widget child,
-                                                          ImageChunkEvent?
-                                                              loadingProgress) {
-                                                    if (loadingProgress ==
-                                                        null) {
-                                                      return child;
-                                                    }
-                                                    return const SizedBox(
-                                                      height: 500,
-                                                    );
-                                                  },
+                                            Positioned(
+                                              right: 7,
+                                              child: Image.network(
+                                                agentBackground != null
+                                                    ? agentBackground ??
+                                                        'Loading...'
+                                                    : 'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png',
+                                                fit: BoxFit.fitHeight,
+                                                height: 610,
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  }
+                                                  return const SizedBox(
+                                                    height: 500,
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Positioned(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                child: Hero(
+                                                  tag: 'agentPhoto',
+                                                  child: Image.network(
+                                                    agentPhotoUrl!,
+                                                    fit: BoxFit.fitHeight,
+                                                    height: 610,
+                                                    loadingBuilder: (BuildContext
+                                                            context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      }
+                                                      return const SizedBox(
+                                                        height: 500,
+                                                      );
+                                                    },
+                                                  ),
                                                 ),
                                               ),
                                             ),
