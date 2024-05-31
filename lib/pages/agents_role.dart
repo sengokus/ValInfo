@@ -35,7 +35,8 @@ class AgentRolePage extends StatelessWidget {
               itemCount: agents.length,
               itemBuilder: (context, index) {
                 var agent = agents[index];
-                String agentPhotoUrl = agent['displayIcon'];
+                String agentFace = agent['displayIcon'];
+                String agentPhotoUrl = agent['fullPortrait'];
 
                 // Extracting agent data
                 final agentName = agent['displayName'] ?? '';
@@ -57,24 +58,6 @@ class AgentRolePage extends StatelessWidget {
 
                 return GestureDetector(
                   onTap: () {
-                    print('Tapped:');
-                    print('Agent Name: $agentName');
-                    print('Agent Photo URL: $agentPhotoUrl');
-                    print('Agent Description: $agentDescription');
-                    print('Agent Role: $agentRoleName');
-                    print('Agent Role Icon: $agentRoleIcon');
-                    print('Agent Ability 1 Name: $agentAbility1Name');
-                    print('Agent Ability 1 Icon: $agentAbility1Icon');
-                    print('Agent Ability 1 Description: $agentAbility1Description');
-                    print('Agent Ability 2 Name: $agentAbility2Name');
-                    print('Agent Ability 2 Icon: $agentAbility2Icon');
-                    print('Agent Ability 2 Description: $agentAbility2Description');
-                    print('Agent Ability 3 Name: $agentAbility3Name');
-                    print('Agent Ability 3 Icon: $agentAbility3Icon');
-                    print('Agent Ability 3 Description: $agentAbility3Description');
-                    print('Agent Ability 4 Name: $agentAbility4Name');
-                    print('Agent Ability 4 Icon: $agentAbility4Icon');
-                    print('Agent Ability 4 Description: $agentAbility4Description');
 
                     // Navigate to AgentDetailsPage when the card is tapped
                     Navigator.push(
@@ -103,7 +86,7 @@ class AgentRolePage extends StatelessWidget {
                     );
                   },
                   child: Card(
-                    child: Image.network(agentPhotoUrl, fit: BoxFit.cover),
+                    child: Image.network(agentFace, fit: BoxFit.cover),
                   ),
                 );
               },
