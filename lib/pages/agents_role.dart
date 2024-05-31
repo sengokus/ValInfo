@@ -117,6 +117,5 @@ class AgentRolePage extends StatelessWidget {
           ],
         ),
       ),
-    );
   }
 }
