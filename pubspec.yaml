@@ -16,7 +16,6 @@ dependencies:
   google_fonts: ^4.0.4
   http: ^0.13.6
   provider: ^6.1.2
-  shared_preferences: ^2.2.3
   val_api: ^0.0.3
 
 dev_dependencies:
