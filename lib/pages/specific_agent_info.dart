@@ -27,6 +27,7 @@ class AgentDetailsPage extends StatefulWidget {
   final String agentAbility4Name;
   final String agentAbility4Description;
   final String agentAbility4Icon;
+  //final List<String> agentAbilities;
 
   const AgentDetailsPage({
     required this.agentName,
@@ -77,7 +78,17 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
     log("Role: ${widget.agentRole} : ${widget.agentRoleIcon}");
 
     return Scaffold(
-      body: Center(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff3e606c), Color(0xff4c7a8a), Color(0xff222042)],
+            stops: [0, 0.12, 1],
+            begin: Alignment(-0.4, -1.0),
+            end: Alignment(1.9, 2.3),
+          ),
+        ),
         child: Stack(
           children: [
             Stack(
@@ -104,10 +115,12 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                 top: 10,
                 right: 20,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       widget.agentName,
                       style: TextStyle(
+                        height: 1.0,
                         color: Theme.of(context).textTheme.titleMedium!.color,
                         fontFamily:
                             Theme.of(context).textTheme.titleMedium!.fontFamily,
@@ -116,27 +129,29 @@ class _AgentDetailsPageState extends State<AgentDetailsPage> {
                       ),
                     ),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: Image.network(
-                              widget.agentRoleIcon != 'Loading'
-                                  ? widget.agentRoleIcon
-                                  : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                              width: 12,
+                              height: 12,
+                              child: Image.network(
+                                widget.agentRoleIcon != 'Loading'
+                                    ? widget.agentRoleIcon
+                                    : 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png',
+                                fit: BoxFit.cover,
+                              )),
                         ),
                         Text(
-                          widget.agentRole != 'Loading'
-                              ? widget.agentRole
-                              : 'Initiator',
-                          style: const TextStyle(
+                          currentAgentRole != 'Loading' ? currentAgentRole : 'Initiator',
+                          style: TextStyle(
+                            height: 0.2,
+                            fontFamily: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .fontFamily,
                             fontSize: 16,
-                            color: Colors.white,
                           ),
                         ),
                       ],
